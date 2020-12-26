@@ -1,0 +1,149 @@
+# // -----------------------------add station ---------------------
+# POST http://localhost:3900/ct/stations
+# content-type: application/json
+
+# {
+#     "nom": "RM6",
+#     "uniteImplantation": "66°BIS",
+#     "surMirador": "true"
+# }
+
+# // -------------------------------add fonction ----
+# POST http://localhost:3900/ct/fonctions
+# content-type: application/json
+
+# {
+#     "nom": "radariste"
+# }
+
+//---------------------------- add military man---------------
+
+# POST http://localhost:3900/ct/militaires
+# content-type: application/json
+
+# {
+#     "nom": "hassani",
+#     "prenom": "ali",
+#     "grade": "2°cl",
+#     "mle":"945/87687",
+#     "uniteOrigine":"44°BIS",
+#     "fonction": "5fe0ea310c18264551a80aa7"
+# }
+
+// ------------------------------ add permission--------------
+POST http://localhost:3900/ct/permissions
+content-type: application/json
+
+{
+    "militaire": "5fe3674333bda96246f0f618",
+    "type": "exceptionnelle",
+    "dateDepart": "2017-06-20",
+    "dateArrivee":"2016-07-10"
+}
+
+
+// ------------------------------------add stage 
+
+# POST http://localhost:3900/ct/stages
+# content-type: application/json
+
+# {
+#     "nom": "BCM"
+# }
+
+// ---------------------------------add stage Effectue
+
+# POST http://localhost:3900/ct/stagesEffectues
+# content-type: application/json
+
+# {
+#     "stage": "5fe0ebbb0c18264551a80ab2",
+#     "militaire": "5fe0eadd0c18264551a80aab",
+#     "dateDebut": "2019-09-20",
+#     "dateFin":"2020-12-09"
+# }
+// -------------------------------add infoPeronnel
+
+# POST http://localhost:3900/ct/infosPersonnel
+# content-type: application/json
+
+# {
+#     "militaire": "5fca91cbc3823934bc44200e",
+#     "cin": "U678189",
+#     "mutuelle": "1098321",
+#     "adresse":"N°App 16 residence Amal -kenitra",
+#     "dateNaissance":"1992-09-17",
+#     "telephone":"0615361543"
+# }
+
+// --------------------------add releve ---------------
+# POST http://localhost:3900/ct/releves
+# content-type: application/json
+
+# {
+#     "militaire": "5fca9212c3823934bc44200f",
+#     "station": "5fca9051ea6f83325800bec6",
+#     "dateAffectation": "2020-10-15"
+# }
+
+# // ------------------------add indispobinilite radar ----
+# POST http://localhost:3900/ct/indisponibilitesRadar
+# content-type: application/json
+
+# {
+#     "station": "5fd2784c21b21283ec3bb749",
+#     "dateArret":"2020-10-12"
+# }
+
+// ------------------------add nombre Detection----
+# POST http://localhost:3900/ct/nombreDetections
+# content-type: application/json
+
+# {
+#     "station": "5fca9051ea6f83325800bec6",
+#     "date":"2020-09-12",
+#     "pieton": 27,
+#     "dromadaire": 16,
+#     "vehiculeLeger": 89,
+#     "vehiculeLourd": 90,
+#     "NI": 16
+# }
+
+ // -----------------------------add categorieRadio ---------------------
+# POST http://localhost:3900/ct/categoriesRadio
+# content-type: application/json
+
+# {
+#     "nom": "PRC77",
+#     "bande": "VHF"
+# }
+
+
+# # // ------------------------------ add accessoires--------------
+# # POST http://localhost:3900/ct/accessoires
+# # content-type: application/json
+
+# {
+#     "categorieRadio": "5fd218bf0ea38244a8412675",
+#     "nom": "RC292"
+# }
+
+#  // -----------------------------add materiel ---------------------
+# POST http://localhost:3900/ct/materiels
+# content-type: application/json
+
+# {
+#     "numeroSerie": 17979865765,
+#     "categorie": "5fd28abe92334799bd1f650e"
+# }
+
+// --------------------------add releve ---------------
+# POST http://localhost:3900/ct/suiviMateriels
+# content-type: application/json
+
+# {
+#     "militaire": "5fd295925b8349a2a1580a69",
+#     "materiel": "5fd28b32f967489a6aaea91b",
+#     "dateMouvement": "2020-10-15",
+#     "emplacement" : "1BTRANS"
+# }

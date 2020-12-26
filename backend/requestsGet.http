@@ -1,0 +1,13 @@
+// --- get request
+# GET http://localhost:3900/ct/stagesEffectues
+# GET http://localhost:3900/ct/permissions
+GET http://localhost:3900/ct/militaires/5fe0eadd0c18264551a80aab
+# GET http://localhost:3900/ct/fonctions
+# GET http://localhost:3900/ct/stages
+# GET http://localhost:3900/ct/infosPersonnel
+# GET http://localhost:3900/ct/stations
+# GET http://localhost:3900/ct/indisponibilitesRadar
+# GET http://localhost:3900/ct/releves
+# GET http://localhost:3900/ct/categoriesRadio
+# GET http://localhost:3900/ct/materiels
+# GET http://localhost:3900/ct/suiviMateriels
