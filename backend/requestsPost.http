@@ -22,15 +22,96 @@
 
 // -----------------------------add service ---------------------
 
-POST http://localhost:3900/psapi/services
+# POST http://localhost:3900/psapi/services
+# content-type: application/json
+
+# {
+
+#     "name": "lignes de vie sur bac",
+#     "caracteristiques":["Bac acier partir de 0,5","Certifiées selon EN 795-C  pour 2 utilisateurs"],
+#     "images":["image1","image2","image3"] ,
+#     "accessoires":["5fe755771a214ccdb68144c0","5fe757721a214ccdb68144c1"],
+#     "categorie":"5fe7818c1d936a73778504f3"
+
+# }
+
+
+# // -----------------------------add categorie produit ---------------------
+
+# POST http://localhost:3900/psapi/productscategorie
+# content-type: application/json
+
+# {
+#     "name": "equipement de protection individuel",
+#     "description":"equipement de protection individuel au MAROC Etude et installation de la ligne de vie horizontale au MAROC chez P&S ",
+#     "image":"images/categorieProduit/equipementProtection.jpg"
+# }
+
+
+
+// -----------------------------add categorie produit ---------------------
+
+# POST http://localhost:3900/psapi/productstype
+# content-type: application/json
+
+# {
+#     "name": "harnais",
+#     "image":"images/productType/harnais.jpg",
+#     "description":"equipements de protection  individuel",
+#     "categorie":"5fe891274015f05a84287111"
+# }
+
+
+
+# # // -----------------------------add client ---------------------
+# POST http://localhost:3900/psapi/clients
+# content-type: application/json
+
+# {
+#     "name": "mourad",
+#     "email":"mouradvilla2@gmail.com"
+# }
+
+
+// -----------------------------add product ---------------------
+# POST http://localhost:3900/psapi/products
+# content-type: application/json
+
+# {
+#     "name": "IRIS",
+#     "image":"images/products/iris.jpg",
+#     "type":"5fe8913f4015f05a84287112",
+#     "description":"HIRIS est un harnais simple et fonctionnel pour effectuer des interventions"
+
+#  }
+# # // -----------------------------add post ---------------------
+
+# PUT http://localhost:3900/psapi/products/avis/5fea22c9a6141795169992c7
+# content-type: application/json
+
+# {
+#     "note": 3,
+#     "comment":"il ya beacucoup d'erreur",
+#     "client": {
+#         "name":"mourad",
+#         "email":"mouradvilla2@gmail.com"
+#     }
+    
+# }
+        
+   
+# // -----------------------------add command ---------------------
+
+PUT http://localhost:3900/psapi/products/commands/5fea22c9a6141795169992c7
 content-type: application/json
 
 {
-
-    "name": "lignes de vie sur bac",
-    "caracteristiques":["Bac acier partir de 0,5","Certifiées selon EN 795-C  pour 2 utilisateurs"],
-    "images":["image1","image2","image3"] ,
-    "accessoires":["5fe755771a214ccdb68144c0","5fe757721a214ccdb68144c1"],
-    "categorie":"5fe7818c1d936a73778504f3"
-
+    "numberArticle": 3,
+    "message":"je pourais prendre plus",
+    "client": {
+        "name":"hamid",
+        "email":"mouradvilla@gmail.com"
+    }
+    
 }
+        

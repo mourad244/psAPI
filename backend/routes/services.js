@@ -66,10 +66,10 @@ router.put("/:id" /* , [auth] */, async (req, res) => {
       categorie: {
         _id: categorieSvc._id,
       },
-      categorie: {
-        _id: categorieSvc._id,
-        name: categorieSvc.name,
-      },
+      // categorie: {
+      //   _id: categorieSvc._id,
+      //   name: categorieSvc.name,
+      // },
     },
     { new: true }
   );

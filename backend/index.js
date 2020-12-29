@@ -5,6 +5,10 @@ const express = require("express");
 const categoriesSvc = require("./routes/categoriesSvc");
 const accessoires = require("./routes/accessoires");
 const services = require("./routes/services");
+const productsCategorie = require("./routes/productsCategorie");
+const productsType = require("./routes/productsType");
+const clients = require("./routes/clients");
+const products = require("./routes/products");
 const app = express();
 const cors = require("cors");
 
@@ -23,6 +27,10 @@ app.use(express.json());
 app.use("/psapi/categoriesvc", categoriesSvc);
 app.use("/psapi/accessoires", accessoires);
 app.use("/psapi/services", services);
+app.use("/psapi/productscategorie", productsCategorie);
+app.use("/psapi/productstype", productsType);
+app.use("/psapi/clients", clients);
+app.use("/psapi/products", products);
 
 const port = process.env.PORT || 3900;
 app.listen(port, () => console.log(`Listening on port ${port}...`));
