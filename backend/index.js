@@ -23,14 +23,16 @@ mongoose
   .then(() => console.log("Connected to MongoDB..."))
   .catch((err) => console.log("Could not connect to MongoDB...", err));
 
+// app.use(express.urlencoded({ extended: true }));
+
 app.use(express.json());
+app.use("/psapi/products", products);
+app.use("/psapi/productstype", productsType);
+app.use("/psapi/productscategorie", productsCategorie);
 app.use("/psapi/categoriesvc", categoriesSvc);
 app.use("/psapi/accessoires", accessoires);
 app.use("/psapi/services", services);
-app.use("/psapi/productscategorie", productsCategorie);
-app.use("/psapi/productstype", productsType);
 app.use("/psapi/clients", clients);
-app.use("/psapi/products", products);
 
 const port = process.env.PORT || 3900;
 app.listen(port, () => console.log(`Listening on port ${port}...`));

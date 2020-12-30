@@ -10,9 +10,8 @@ const productSchema = new mongoose.Schema({
     maxlength: 255,
   },
   image: {
-    type: String,
-    minlength: 5,
-    maxlength: 255,
+    data: Buffer,
+    contentType: String,
   },
   type: {
     type: mongoose.Schema.Types.ObjectId,
@@ -26,9 +25,12 @@ const productSchema = new mongoose.Schema({
   commands: {
     type: Array,
   },
-  avis: {
-    type: Array,
-  },
+  avis: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: "avi",
+    },
+  ],
 });
 
 const Product = mongoose.model("product", productSchema);
