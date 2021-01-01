@@ -71,19 +71,17 @@
 #     "name": "mourad",
 #     "email":"mouradvilla2@gmail.com"
 # }
-
-
 // -----------------------------add product ---------------------
-# POST http://localhost:3900/psapi/products
-# content-type: application/json
+POST http://localhost:3900/psapi/products
+content-type: application/json
 
-# {
-#     "name": "GAIA",
-#     "image":"images/products/gaia.jpg",
-#     "type":"5fe8913f4015f05a84287112",
-#     "description":"Le harnais de travail GAIA pour positionnement et suspension est simple à enfiler et polyvalent."
+{
+    "name": "GAIA",
+    "image":"",
+    "type":"5fe8913f4015f05a84287112",
+    "description":"Le harnais de travail GAIA pour positionnement et suspension est simple à enfiler et polyvalent."
 
-#  }
+ }
 # # // -----------------------------add post ---------------------
 
 # PUT http://localhost:3900/psapi/products/avis/5feb86589cccef541d042638

@@ -36,9 +36,10 @@ const productSchema = new mongoose.Schema({
 const Product = mongoose.model("product", productSchema);
 
 function validateProduct(product) {
+  console.log(product);
   const schema = Joi.object({
-    type: Joi.objectId().required(),
     name: Joi.string().min(3).max(50).required(),
+    type: Joi.objectId().required(),
     image: Joi.string().min(5).max(255),
     description: Joi.string().min(3),
   });

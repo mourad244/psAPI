@@ -4,6 +4,9 @@ const { Product, validate } = require("../models/product");
 const { validateAvi, Avi } = require("../models/avi");
 const { validateClient, Client } = require("../models/client");
 const { ProductType } = require("../models/productType");
+const upload = require("../middleware/upload");
+const fs = require("fs");
+const path = require("path");
 
 // const auth = require("../middleware/auth");
 const router = express.Router();
@@ -19,10 +22,13 @@ router.get("/" /* , auth */, async (req, res) => {
   res.send(products);
 });
 
-router.post("/" /* , auth */, async (req, res) => {
+//---------------------------------------
+router.post("/" /* , auth */, upload.single("image"), async (req, res) => {
+  //   const img = fs.readFileSync(req.file.path);
+  // const img_enc = img.toString("base64");
+  // console.log(img_enc);
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
-
   const productType = await ProductType.findById(req.body.type);
   if (!productType) return res.status(400).send("Invalid categorie product.");
 
@@ -30,13 +36,16 @@ router.post("/" /* , auth */, async (req, res) => {
     name: req.body.name,
     description: req.body.description,
     type: { _id: productType._id },
-    image: req.body.image,
+    image: {
+      data: fs.readFileSync(path.join("./uploads/" + req.file.filename)),
+      contentType: "image/jpg",
+    },
   });
-  // console.log(product.type);
-  await product.save();
-
+  // await product.save();
   res.send(product);
 });
+
+//--------------------------*****************************
 
 router.delete("/:id" /* , auth */, async (req, res) => {
   const product = await Product.findByIdAndRemove(req.params.id);
