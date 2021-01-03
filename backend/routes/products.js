@@ -12,42 +12,51 @@ const path = require("path");
 const router = express.Router();
 
 router.get("/" /* , auth */, async (req, res) => {
+  // const directoryPath = "/images/products/";
+  // fs.readdir(directoryPath, function (err, file) {
+  //   if (err) {
+  //     res.status(500).send({
+  //       message: "Unable to scan file",
+  //     });
+  //   }
+
+  //   let fileInfos
+  // });
   const products = await Product.find()
     .populate("type", "name")
     .populate("producttype", "name")
     .populate("avis", "comment client")
     .select("-__v -commands")
     .sort("name");
-  // res.render("app", products);
-  res.send(products);
+
+  // res.send(products);
 });
 
 //---------------------------------------
 router.post("/" /* , auth */, async (req, res) => {
   try {
     await uploadFile(req, res);
+    console.log(req.file);
 
     if (req.file == undefined) {
       return res.status(400).send({ message: "Please upload a file!" });
     }
-    console.log(req.body.name);
-    res.status(200).send({
-      message: "Uploaded the file successfully: " + req.file.originalname,
-    });
+    // res.status(200).send({
+    //   message: "Uploaded the file successfully: " + req.file.originalname,
+    // });
     const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
     const productType = await ProductType.findById(req.body.type);
     if (!productType) return res.status(400).send("Invalid categorie product.");
-    // const product = new Product({
-    //   name: req.body.name,
-    //   description: req.body.description,
-    //   type: { _id: productType._id },
-    //   image: {},
+    const product = new Product({
+      name: req.body.name,
+      description: req.body.description,
+      type: { _id: productType._id },
+      image: req.file.path,
+    });
 
-    // });
-    // await product.save();
-    console.log("done");
-    // res.send(product);
+    await product.save();
+    res.send(product);
   } catch (err) {
     res.status(500).send({
       message: `Could not upload the file: ${req.file.originalname}. ${err}`,

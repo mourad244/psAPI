@@ -10,8 +10,7 @@ const productSchema = new mongoose.Schema({
     maxlength: 255,
   },
   image: {
-    data: Buffer,
-    contentType: String,
+    type: String,
   },
   type: {
     type: mongoose.Schema.Types.ObjectId,
