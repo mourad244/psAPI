@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
@@ -28,6 +28,7 @@
     "mongoose-sequence": "^5.3.0",
     "multer": "^1.4.2",
     "multer-gridfs-storage": "^4.2.0",
+    "nodemon": "^2.0.6",
     "react-moment": "^1.1.1"
   }
 }

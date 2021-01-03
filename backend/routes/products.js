@@ -4,7 +4,7 @@ const { Product, validate } = require("../models/product");
 const { validateAvi, Avi } = require("../models/avi");
 const { validateClient, Client } = require("../models/client");
 const { ProductType } = require("../models/productType");
-const upload = require("../middleware/upload");
+const uploadFile = require("../middleware/upload");
 const fs = require("fs");
 const path = require("path");
 
@@ -23,26 +23,36 @@ router.get("/" /* , auth */, async (req, res) => {
 });
 
 //---------------------------------------
-router.post("/" /* , auth */, upload.single("image"), async (req, res) => {
-  //   const img = fs.readFileSync(req.file.path);
-  // const img_enc = img.toString("base64");
-  // console.log(img_enc);
-  const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
-  const productType = await ProductType.findById(req.body.type);
-  if (!productType) return res.status(400).send("Invalid categorie product.");
+router.post("/" /* , auth */, async (req, res) => {
+  try {
+    await uploadFile(req, res);
 
-  const product = new Product({
-    name: req.body.name,
-    description: req.body.description,
-    type: { _id: productType._id },
-    image: {
-      data: fs.readFileSync(path.join("./uploads/" + req.file.filename)),
-      contentType: "image/jpg",
-    },
-  });
-  // await product.save();
-  res.send(product);
+    if (req.file == undefined) {
+      return res.status(400).send({ message: "Please upload a file!" });
+    }
+    console.log(req.body.name);
+    res.status(200).send({
+      message: "Uploaded the file successfully: " + req.file.originalname,
+    });
+    const { error } = validate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
+    const productType = await ProductType.findById(req.body.type);
+    if (!productType) return res.status(400).send("Invalid categorie product.");
+    // const product = new Product({
+    //   name: req.body.name,
+    //   description: req.body.description,
+    //   type: { _id: productType._id },
+    //   image: {},
+
+    // });
+    // await product.save();
+    console.log("done");
+    // res.send(product);
+  } catch (err) {
+    res.status(500).send({
+      message: `Could not upload the file: ${req.file.originalname}. ${err}`,
+    });
+  }
 });
 
 //--------------------------*****************************

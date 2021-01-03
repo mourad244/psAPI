@@ -36,7 +36,7 @@
 # }
 
 
-# // -----------------------------add categorie produit ---------------------
+// -----------------------------add categorie produit ---------------------
 
 # POST http://localhost:3900/psapi/productscategorie
 # content-type: application/json
@@ -58,7 +58,7 @@
 #     "name": "harnais",
 #     "image":"images/productType/harnais.jpg",
 #     "description":"equipements de protection  individuel",
-#     "categorie":"5fe891274015f05a84287111"
+#     "categorie":"5ff0bdc047a96b3c4c6be7a1"
 # }
 
 
@@ -78,7 +78,7 @@ content-type: application/json
 {
     "name": "GAIA",
     "image":"",
-    "type":"5fe8913f4015f05a84287112",
+    "type":"5ff0bdf647a96b3c4c6be7a2",
     "description":"Le harnais de travail GAIA pour positionnement et suspension est simple à enfiler et polyvalent."
 
  }

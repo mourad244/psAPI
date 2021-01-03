@@ -2,9 +2,9 @@
 # GET http://localhost:3900/psapi/accessoires
 # GET http://localhost:3900/psapi/categoriesvc
 # GET http://localhosst:3900/psapi/services/5fe7afffd6d40bb2f1a98cbf
-# GET http://localhost:3900/psapi/productscategorie/
+GET http://localhost:3900/psapi/productscategorie/
 # GET http://localhost:3900/psapi/productsType
-GET http://localhost:3900/psapi/products
+# GET http://localhost:3900/psapi/products
 // ------------------------- get avis of product
 # GET http://localhost:3900/psapi/products/avis/5fea22c9a6141795169992c7
 // -------------------- get commands of a product
