@@ -9,16 +9,28 @@ router.get("/" /* , auth */, async (req, res) => {
 });
 
 router.post("/" /* , auth */, async (req, res) => {
-  const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  try {
+    await uploadFile(req, res);
+    console.log(req.file);
 
-  let accessoire = new Accessoire({
-    name: req.body.name,
-    image: req.body.image,
-  });
-  accessoire = await accessoire.save();
+    if (req.file == undefined) {
+      return res.status(400).send({ message: "Please upload a file!" });
+    }
+    const { error } = validate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
 
-  res.send(accessoire);
+    const accessoire = new Accessoire({
+      name: req.body.name,
+      image: req.file.path,
+    });
+    accessoire = await accessoire.save();
+
+    res.send(accessoire);
+  } catch (err) {
+    res.status(500).send({
+      message: `Could not upload the file: ${req.file.originalname}. ${err}`,
+    });
+  }
 });
 
 router.put("/:id" /* , auth */, async (req, res) => {

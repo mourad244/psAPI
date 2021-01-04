@@ -7,6 +7,8 @@ const { CategorieSvc } = require("../models/categorieSvc");
 // const admin = require("../middleware/admin");
 const validateObjectId = require("../middleware/validateObjectId");
 const { Accessoire } = require("../models/accessoire");
+const uploadImages = require("../middleware/uploadImages");
+
 const _ = require("lodash");
 const router = express.Router();
 
@@ -20,28 +22,43 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/" /* , [auth] */, async (req, res) => {
-  const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  try {
+    await uploadImages(req, res);
+    console.log();
 
-  const accessoires = await Accessoire.find({
-    _id: { $in: req.body.accessoires },
-  });
-  if (!accessoires) return res.status(400).send("Invalid accessoires.");
+    if (req.files.length <= 0) {
+      return res.send(`You must select at least 1 file.`);
+    }
 
-  const categorieSvc = await CategorieSvc.findById(req.body.categorie);
-  if (!categorieSvc) return res.status(400).send("Invalid categorie service.");
+    const { error } = validate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
 
-  const service = new Service({
-    name: req.body.name,
-    caracteristiques: req.body.caracteristiques,
-    images: req.body.images,
-    accessoires: accessoires,
-    categorie: {
-      _id: categorieSvc._id,
-    },
-  });
-  await service.save();
-  res.send(service);
+    const accessoires = await Accessoire.find({
+      _id: { $in: req.body.accessoires },
+    });
+    if (!accessoires) return res.status(400).send("Invalid accessoires.");
+
+    const categorieSvc = await CategorieSvc.findById(req.body.categorie);
+    if (!categorieSvc)
+      return res.status(400).send("Invalid categorie service.");
+
+    const service = new Service({
+      name: req.body.name,
+      caracteristiques: req.body.caracteristiques,
+      images: req.files.map((file) => file.path),
+      accessoires: accessoires,
+      categorie: {
+        _id: categorieSvc._id,
+      },
+    });
+    await service.save();
+    res.send(service);
+  } catch (error) {
+    if (error.code === "LIMIT_UNEXPECTED_FILE") {
+      return res.send("Too many files to upload.");
+    }
+    return res.send(`Error when trying upload many files: ${error}`);
+  }
 });
 
 router.put("/:id" /* , [auth] */, async (req, res) => {

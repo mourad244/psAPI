@@ -36,7 +36,7 @@ router.get("/" /* , auth */, async (req, res) => {
 router.post("/" /* , auth */, async (req, res) => {
   try {
     await uploadFile(req, res);
-    console.log(req.file);
+    // console.log(req.file);
 
     if (req.file == undefined) {
       return res.status(400).send({ message: "Please upload a file!" });
