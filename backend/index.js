@@ -9,6 +9,8 @@ const productsCategorie = require("./routes/productsCategorie");
 const productsType = require("./routes/productsType");
 const clients = require("./routes/clients");
 const products = require("./routes/products");
+const users = require("./routes/users");
+const auth = require("./routes/auth");
 const app = express();
 const cors = require("cors");
 
@@ -22,7 +24,7 @@ mongoose
   .connect("mongodb://localhost/psapi", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    // useCreateIndex: true,
+    useCreateIndex: true,
     // useFindAndModify: false,
   })
   .then(() => console.log("Connected to MongoDB..."))
@@ -36,6 +38,8 @@ app.use("/psapi/categoriesvc", categoriesSvc);
 app.use("/psapi/accessoires", accessoires);
 app.use("/psapi/services", services);
 app.use("/psapi/clients", clients);
+app.use("/psapi/users", users);
+app.use("/psapi/auth", auth);
 
 const port = process.env.PORT || 3900;
 app.listen(port, () => console.log(`Listening on port ${port}...`));

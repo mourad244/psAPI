@@ -5,10 +5,10 @@ const { validateAvi, Avi } = require("../models/avi");
 const { validateClient, Client } = require("../models/client");
 const { ProductType } = require("../models/productType");
 const uploadFile = require("../middleware/upload");
+const auth = require("../middleware/auth");
 const fs = require("fs");
 const path = require("path");
 
-// const auth = require("../middleware/auth");
 const router = express.Router();
 
 router.get("/" /* , auth */, async (req, res) => {
@@ -33,7 +33,7 @@ router.get("/" /* , auth */, async (req, res) => {
 });
 
 //---------------------------------------
-router.post("/" /* , auth */, async (req, res) => {
+router.post("/", auth, async (req, res) => {
   try {
     await uploadFile(req, res);
     console.log(req.file);
