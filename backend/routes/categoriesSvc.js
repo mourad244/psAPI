@@ -1,14 +1,15 @@
 const { CategorieSvc, validate } = require("../models/categorieSvc");
-// const auth = require("../middleware/auth");
+const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
 const express = require("express");
 const router = express.Router();
 
-router.get("/" /* , auth */, async (req, res) => {
+router.get("/", async (req, res) => {
   const categoriesSvc = await CategorieSvc.find().select("-__v").sort("name");
   res.send(categoriesSvc);
 });
 
-router.post("/" /* , auth */, async (req, res) => {
+router.post("/", [auth, admin], async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -23,7 +24,7 @@ router.post("/" /* , auth */, async (req, res) => {
   res.send(categorieSvc);
 });
 
-router.put("/:id" /* , auth */, async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -46,7 +47,7 @@ router.put("/:id" /* , auth */, async (req, res) => {
   res.send(categorieSvc);
 });
 
-router.delete("/:id" /* , auth */, async (req, res) => {
+router.delete("/:id", [auth, admin], async (req, res) => {
   const categorieSvc = await CategorieSvc.findByIdAndRemove(req.params.id);
 
   if (!categorieSvc)
@@ -57,7 +58,7 @@ router.delete("/:id" /* , auth */, async (req, res) => {
   res.send(categorieSvc);
 });
 
-router.get("/:id" /* , auth */, async (req, res) => {
+router.get("/:id", async (req, res) => {
   const categorieSvc = await CategorieSvc.findById(req.params.id).select(
     "-__v"
   );

@@ -6,22 +6,13 @@ const { validateClient, Client } = require("../models/client");
 const { ProductType } = require("../models/productType");
 const uploadFile = require("../middleware/upload");
 const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
 const fs = require("fs");
 const path = require("path");
 
 const router = express.Router();
 
-router.get("/" /* , auth */, async (req, res) => {
-  // const directoryPath = "/images/products/";
-  // fs.readdir(directoryPath, function (err, file) {
-  //   if (err) {
-  //     res.status(500).send({
-  //       message: "Unable to scan file",
-  //     });
-  //   }
-
-  //   let fileInfos
-  // });
+router.get("/", async (req, res) => {
   const products = await Product.find()
     .populate("type", "name")
     .populate("producttype", "name")
@@ -29,25 +20,46 @@ router.get("/" /* , auth */, async (req, res) => {
     .select("-__v -commands")
     .sort("name");
 
-  // res.send(products);
+  res.send(products);
 });
+router.put("/:id", auth, async (req, res) => {
+  await uploadFile(req, res);
 
+  const { error } = validate(req.body);
+
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const product = await Product.findOne({ _id: req.params.id });
+  if (req.file) {
+    fs.unlinkSync(product.image);
+    product.image = req.file.path;
+  }
+  const { name, type, description } = req.body;
+  if (name) product.name = name;
+  if (type) product.type = type;
+  if (description) product.description = description;
+
+  await product.save();
+
+  if (!product)
+    return res.status(404).send("le produit avec cette id n'existe pas.");
+
+  res.send(product);
+});
 //---------------------------------------
 router.post("/", auth, async (req, res) => {
   try {
     await uploadFile(req, res);
-    console.log(req.file);
-
     if (req.file == undefined) {
       return res.status(400).send({ message: "Please upload a file!" });
     }
-    // res.status(200).send({
-    //   message: "Uploaded the file successfully: " + req.file.originalname,
-    // });
+
     const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
+
     const productType = await ProductType.findById(req.body.type);
     if (!productType) return res.status(400).send("Invalid categorie product.");
+
     const product = new Product({
       name: req.body.name,
       description: req.body.description,
@@ -66,8 +78,9 @@ router.post("/", auth, async (req, res) => {
 
 //--------------------------*****************************
 
-router.delete("/:id" /* , auth */, async (req, res) => {
+router.delete("/:id", [auth, admin], async (req, res) => {
   const product = await Product.findByIdAndRemove(req.params.id);
+  fs.unlinkSync(product.image);
 
   if (!product)
     return res.status(404).send("le product avec cette id n'existe pas.");

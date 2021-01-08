@@ -1,25 +1,26 @@
 const { Client, validate } = require("../models/client");
-// const auth = require("../middleware/auth");
+const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
 const express = require("express");
 const router = express.Router();
 
-router.get("/" /* , auth */, async (req, res) => {
+router.get("/", async (req, res) => {
   const clients = await Client.find().select("-__v").sort("name");
   res.send(clients);
 });
 
-router.post("/" /* , auth */, async (req, res) => {
-  const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+// router.post("/" /* , auth */, async (req, res) => {
+//   const { error } = validate(req.body);
+//   if (error) return res.status(400).send(error.details[0].message);
 
-  let client = new Client({
-    name: req.body.name,
-    email: req.body.email,
-  });
-  client = await client.save();
+//   let client = new Client({
+//     name: req.body.name,
+//     email: req.body.email,
+//   });
+//   client = await client.save();
 
-  res.send(client);
-});
+//   res.send(client);
+// });
 
 // router.put("/:id" /* , auth */, async (req, res) => {
 //   const { error } = validate(req.body);
@@ -40,7 +41,7 @@ router.post("/" /* , auth */, async (req, res) => {
 //   res.send(client);
 // });
 
-router.delete("/:id" /* , auth */, async (req, res) => {
+router.delete("/:id", [auth, admin], async (req, res) => {
   const client = await Client.findByIdAndRemove(req.params.id);
 
   if (!client)

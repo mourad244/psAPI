@@ -10,8 +10,8 @@ const accessoireSchema = new mongoose.Schema({
   },
   image: {
     type: String,
-    minlength: 5,
-    maxlength: 255,
+    // minlength: 5,
+    // maxlength: 255,
   },
 });
 
