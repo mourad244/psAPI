@@ -13,7 +13,8 @@ const productTypeSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    minlength: 5,
+    default: null,
+
     maxlength: 255,
   },
   categorie: {
@@ -29,7 +30,7 @@ function validateProductType(productType) {
   const schema = Joi.object({
     name: Joi.string().min(3).max(50).required(),
     image: Joi.string(),
-    description: Joi.string().min(5).max(255),
+    description: Joi.string().allow(null, "").max(255),
     categorie: Joi.objectId().required(),
   });
 

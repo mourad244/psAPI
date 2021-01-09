@@ -9,7 +9,6 @@ const productCategorieSchema = new mongoose.Schema({
   description: {
     type: String,
     minlength: 5,
-    required: true,
   },
   image: {
     type: String,
@@ -24,7 +23,7 @@ const ProductCategorie = mongoose.model(
 function validateCategorieProduit(productCategorie) {
   const schema = Joi.object({
     name: Joi.string().min(3).max(50).required(),
-    description: Joi.string().min(3).max(255).required(),
+    description: Joi.string().min(3).max(255),
     image: Joi.string().min(5).max(255),
   });
   return schema.validate(productCategorie);

@@ -23,12 +23,12 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const uploadFile = multer({
+const uploadImage = multer({
   storage: storage,
   limits: { fileSize: maxsize },
   fileFilter: fileFilter,
 }).single("image");
 
-const uploadFileMiddleware = util.promisify(uploadFile);
+const uploadImageMiddleware = util.promisify(uploadImage);
 
-module.exports = uploadFileMiddleware;
+module.exports = uploadImageMiddleware;

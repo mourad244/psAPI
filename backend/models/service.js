@@ -7,13 +7,14 @@ const Service = mongoose.model(
   new mongoose.Schema({
     name: {
       type: String,
+      trim: true,
       required: true,
       minlength: 3,
       maxlength: 50,
     },
     caracteristiques: {
       type: Array,
-      required: true,
+      trim: true,
     },
     images: {
       type: Array,
@@ -22,10 +23,12 @@ const Service = mongoose.model(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Accessoire",
+        trim: true,
       },
     ],
     categorie: {
       type: mongoose.Schema.Types.ObjectId,
+      trim: true,
       ref: "categorieSvc",
       required: true,
     },

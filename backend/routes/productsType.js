@@ -3,11 +3,13 @@ const moment = require("moment");
 const express = require("express");
 const { ProductType, validate } = require("../models/productType");
 const { ProductCategorie } = require("../models/productCategorie");
-// const auth = require("../middleware/auth");
+const auth = require("../middleware/auth");
+const uploadImage = require("../middleware/uploadImage");
 // const admin = require("../middleware/admin");
 const validateObjectId = require("../middleware/validateObjectId");
 const _ = require("lodash");
 const router = express.Router();
+const fs = require("fs");
 
 router.get("/", async (req, res) => {
   const productsType = await ProductType.find()
@@ -17,46 +19,64 @@ router.get("/", async (req, res) => {
   res.send(productsType);
 });
 
-router.post("/" /* , [auth] */, async (req, res) => {
-  const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+router.post("/", auth, async (req, res) => {
+  try {
+    await uploadImage(req, res);
 
-  const productCategorie = await ProductCategorie.findById(req.body.categorie);
-  if (!productCategorie)
-    return res.status(400).send("Invalid categorie product.");
+    const { error } = validate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
 
-  const productType = new ProductType({
-    name: req.body.name,
-    image: req.body.image,
-    description: req.body.description,
-    categorie: {
-      _id: productCategorie._id,
-    },
-  });
-  await productType.save();
-  res.send(productType);
+    const productCategorie = await ProductCategorie.findById(
+      req.body.categorie
+    );
+    if (!productCategorie)
+      return res.status(400).send("Invalid categorie product.");
+
+    const { name, description, categorie } = req.body;
+    const productType = new ProductType({
+      name: name,
+      description: description,
+      categorie: categorie,
+      image: req.file != undefined ? req.file.path : "",
+    });
+    await productType.save();
+    res.send(productType);
+  } catch (err) {
+    res.status(500).send({
+      message: `Could not upload the image: ${req.file.originalname}. ${err}`,
+    });
+  }
 });
 
-router.put("/:id" /* , [auth] */, async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
+  await uploadImage(req, res);
+
   const { error } = validate(req.body);
+
+  console.log(error);
   if (error) return res.status(400).send(error.details[0].message);
+  const productType = await ProductType.findOne({ _id: req.params.id });
 
-  const productCategorie = await ProductCategorie.findById(req.body.categorie);
-  if (!productCategorie)
-    return res.status(400).send("Invalid categorie product.");
+  if (req.file) {
+    if (productType.image) fs.unlinkSync(productType.image);
+    productType.image = req.file.path;
+  }
 
-  const productType = await ProductType.findByIdAndUpdate(
-    req.params.id,
-    {
-      name: req.body.name,
-      image: req.body.image,
-      description: req.body.description,
-      categorie: {
-        _id: productCategorie._id,
-      },
-    },
-    { new: true }
-  );
+  const { name, description, categorie } = req.body;
+  if (name) {
+    productType.name = name;
+  }
+  if (description) productType.description = description;
+
+  if (categorie) {
+    const productCategorie = await ProductCategorie.findById(
+      req.body.categorie
+    );
+    if (!productCategorie)
+      return res.status(400).send("Invalid categorie product.");
+    productType.categorie = categorie;
+  }
+  await productType.save();
 
   if (!productType)
     return res
@@ -66,7 +86,8 @@ router.put("/:id" /* , [auth] */, async (req, res) => {
   res.send(productType);
 });
 
-router.delete("/:id" /* , [auth, admin] */, async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
+  if (productType.image) fs.unlinkSync(productType.image);
   const productType = await ProductType.findByIdAndRemove(req.params.id);
 
   if (!productType)

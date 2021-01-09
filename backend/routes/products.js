@@ -4,7 +4,7 @@ const { Product, validate } = require("../models/product");
 const { validateAvi, Avi } = require("../models/avi");
 const { validateClient, Client } = require("../models/client");
 const { ProductType } = require("../models/productType");
-const uploadFile = require("../middleware/uploadImage");
+const uploadImage = require("../middleware/uploadImage");
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
 const fs = require("fs");
@@ -24,7 +24,7 @@ router.get("/", async (req, res) => {
 });
 
 router.put("/:id", auth, async (req, res) => {
-  await uploadFile(req, res);
+  await uploadImage(req, res);
 
   const { error } = validate(req.body);
 
@@ -50,21 +50,21 @@ router.put("/:id", auth, async (req, res) => {
 
 router.post("/", auth, async (req, res) => {
   try {
-    await uploadFile(req, res);
+    await uploadImage(req, res);
     if (req.file == undefined) {
-      return res.status(400).send({ message: "Please upload a file!" });
+      return res.status(400).send({ message: "Please upload an image!" });
     }
 
     const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
     const productType = await ProductType.findById(req.body.type);
-    if (!productType) return res.status(400).send("Invalid categorie product.");
+    if (!productType) return res.status(400).send("Invalid type of product.");
 
     const product = new Product({
       name: req.body.name,
       description: req.body.description,
-      type: { _id: productType._id },
+      type: req.body.type,
       image: req.file.path,
     });
 
@@ -72,7 +72,7 @@ router.post("/", auth, async (req, res) => {
     res.send(product);
   } catch (err) {
     res.status(500).send({
-      message: `Could not upload the file: ${req.file.originalname}. ${err}`,
+      message: `Could not upload the image: ${req.file.originalname}. ${err}`,
     });
   }
 });
@@ -97,6 +97,8 @@ router.get("/:id" /* , auth */, async (req, res) => {
 });
 
 router.put("/:id", auth, async (req, res) => {
+  await uploadImage(req, res);
+
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
