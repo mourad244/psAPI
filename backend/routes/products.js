@@ -4,7 +4,7 @@ const { Product, validate } = require("../models/product");
 const { validateAvi, Avi } = require("../models/avi");
 const { validateClient, Client } = require("../models/client");
 const { ProductType } = require("../models/productType");
-const uploadFile = require("../middleware/upload");
+const uploadFile = require("../middleware/uploadImage");
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
 const fs = require("fs");
@@ -22,6 +22,7 @@ router.get("/", async (req, res) => {
 
   res.send(products);
 });
+
 router.put("/:id", auth, async (req, res) => {
   await uploadFile(req, res);
 
@@ -46,7 +47,7 @@ router.put("/:id", auth, async (req, res) => {
 
   res.send(product);
 });
-//---------------------------------------
+
 router.post("/", auth, async (req, res) => {
   try {
     await uploadFile(req, res);
@@ -76,9 +77,7 @@ router.post("/", auth, async (req, res) => {
   }
 });
 
-//--------------------------*****************************
-
-router.delete("/:id", [auth, admin], async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
   const product = await Product.findByIdAndRemove(req.params.id);
   fs.unlinkSync(product.image);
 
@@ -97,8 +96,31 @@ router.get("/:id" /* , auth */, async (req, res) => {
   res.send(product);
 });
 
-//---------------------- add avis
-router.put("/avis/:id" /* , auth */, async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
+  const { error } = validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const productType = await ProductType.findById(req.body.categorie);
+  if (!productType) return res.status(400).send("Invalid categorie product.");
+
+  const product = await Product.findByIdAndUpdate(
+    req.params.id,
+    {
+      name: req.body.name,
+      image: req.body.image,
+      type: productType,
+      description: req.body.description,
+    },
+    { new: true }
+  );
+
+  if (!product)
+    return res.status(404).send("le product avec cette id n'existe pas.");
+
+  res.send(product);
+});
+
+router.put("/avis/:id", async (req, res) => {
   const { error1 } = validateClient(req.body.client);
   if (error1) return res.status(400).send(error.details[0].message);
 
@@ -133,81 +155,6 @@ router.get("/avis/:id", async (req, res) => {
     .select("-__v")
     .sort("note");
   res.send(avis);
-});
-
-// ---------  command a product  ---------------
-// router.put("/commands/:id" /* , auth */, async (req, res) => {
-//   const { error1 } = validateClient(req.body.client);
-//   if (error1) return res.status(400).send(error.details[0].message);
-
-//   let client = new Client({
-//     name: req.body.client.name,
-//     email: req.body.client.email,
-//   });
-
-//   try {
-//     await client.save();
-//   } catch (error) {
-//     console.log("client déja en base de donnée");
-//     client = await Client.find({ email: req.body.client.email });
-
-//     // client = await Client.findById(ancienClient._id);
-//     // console.log(ancienClient[0]._id);
-//   }
-
-//   newClient = client[0]._id || client._id;
-
-//   const command = new Command({
-//     client: newClient,
-//     product: req.params.id,
-//     message: req.body.message,
-//     numberArticle: req.body.numberArticle,
-//   });
-
-//   const product = await Product.findById(req.params.id);
-//   console.log(product);
-//   await command.save();
-//   product.commands.push(command._id);
-
-//   await product.save();
-//   res.send(command);
-// });
-
-// ----------------get all commands
-// router.get("/commands/:id", async (req, res) => {
-//   const product = await Product.findById(req.params.id);
-//   console.log(product);
-//   const command = await Command.find({ _id: { $in: product.commands } })
-//     .populate("product", "name -_id")
-//     .select("-__v")
-//     .sort("note");
-//   res.send(command);
-// });
-
-// -------------------------------------------
-
-router.put("/:id" /* , auth */, async (req, res) => {
-  const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
-
-  const productType = await ProductType.findById(req.body.categorie);
-  if (!productType) return res.status(400).send("Invalid categorie product.");
-
-  const product = await Product.findByIdAndUpdate(
-    req.params.id,
-    {
-      name: req.body.name,
-      image: req.body.image,
-      type: productType,
-      description: req.body.description,
-    },
-    { new: true }
-  );
-
-  if (!product)
-    return res.status(404).send("le product avec cette id n'existe pas.");
-
-  res.send(product);
 });
 
 module.exports = router;

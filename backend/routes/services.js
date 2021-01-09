@@ -4,7 +4,7 @@ const express = require("express");
 const { Service, validate } = require("../models/service");
 const { CategorieSvc } = require("../models/categorieSvc");
 // const auth = require("../middleware/auth");
-// const admin = require("../middleware/admin");
+const admin = require("../middleware/admin");
 const validateObjectId = require("../middleware/validateObjectId");
 const { Accessoire } = require("../models/accessoire");
 const _ = require("lodash");
@@ -19,7 +19,7 @@ router.get("/", async (req, res) => {
   res.send(services);
 });
 
-router.post("/" /* , [auth] */, async (req, res) => {
+router.post("/", admin, async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 

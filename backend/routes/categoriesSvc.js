@@ -2,42 +2,59 @@ const { CategorieSvc, validate } = require("../models/categorieSvc");
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
 const express = require("express");
+const uploadFile = require("../middleware/uploadImage");
 const router = express.Router();
+const fs = require("fs");
 
 router.get("/", async (req, res) => {
   const categoriesSvc = await CategorieSvc.find().select("-__v").sort("name");
   res.send(categoriesSvc);
 });
 
-router.post("/", [auth, admin], async (req, res) => {
-  const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+router.post("/", auth, async (req, res) => {
+  try {
+    await uploadFile(req, res);
+    if (req.file == undefined) {
+      return res.status(400).send({ message: "Please upload a file!" });
+    }
+    const { error } = validate(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
 
-  let categorieSvc = new CategorieSvc({
-    name: req.body.name,
-    smallDesc: req.body.smallDesc,
-    largeDesc: req.body.largeDesc,
-    image: req.body.image,
-  });
-  categorieSvc = await categorieSvc.save();
-
-  res.send(categorieSvc);
-});
-
-router.put("/:id", auth, async (req, res) => {
-  const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
-
-  const categorieSvc = await CategorieSvc.findByIdAndUpdate(
-    req.params.id,
-    {
+    const categorieSvc = new CategorieSvc({
       name: req.body.name,
       smallDesc: req.body.smallDesc,
       largeDesc: req.body.largeDesc,
-      image: req.body.image,
-    },
-    { new: true }
-  );
+      image: req.file.path,
+    });
+    await categorieSvc.save();
+
+    res.send(categorieSvc);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send({
+      message: `Could not upload the file: ${req.file.originalname}. ${err}`,
+    });
+  }
+});
+
+router.put("/:id", auth, async (req, res) => {
+  await uploadFile(req, res);
+
+  const { error } = validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const categorieSvc = await CategorieSvc.findOne({ _id: req.params.id });
+
+  if (req.file) {
+    if (categorieSvc.image) fs.unlinkSync(categorieSvc.image);
+    categorieSvc.image = req.file.path;
+  }
+  const { name, smallDesc, largeDesc } = req.body;
+  if (name) categorieSvc.name = name;
+  if (smallDesc) categorieSvc.smallDesc = smallDesc;
+  if (largeDesc) categorieSvc.largeDesc = largeDesc;
+
+  await categorieSvc.save();
 
   if (!categorieSvc)
     return res
@@ -47,7 +64,7 @@ router.put("/:id", auth, async (req, res) => {
   res.send(categorieSvc);
 });
 
-router.delete("/:id", [auth, admin], async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
   const categorieSvc = await CategorieSvc.findByIdAndRemove(req.params.id);
 
   if (!categorieSvc)

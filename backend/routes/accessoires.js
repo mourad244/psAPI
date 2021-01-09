@@ -2,7 +2,7 @@ const { Accessoire, validate } = require("../models/accessoire");
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
 const express = require("express");
-const uploadFile = require("../middleware/upload");
+const uploadFile = require("../middleware/uploadImage");
 const router = express.Router();
 const fs = require("fs");
 
@@ -38,12 +38,12 @@ router.put("/:id", auth, async (req, res) => {
   await uploadFile(req, res);
 
   const { error } = validate(req.body);
-
   if (error) return res.status(400).send(error.details[0].message);
 
   const accessoire = await Accessoire.findOne({ _id: req.params.id });
+
   if (req.file) {
-    fs.unlinkSync(accessoire.image);
+    if (accessoire.image) fs.unlinkSync(accessoire.image);
     accessoire.image = req.file.path;
   }
 
@@ -58,7 +58,7 @@ router.put("/:id", auth, async (req, res) => {
   res.send(accessoire);
 });
 
-router.delete("/:id", [auth, admin], async (req, res) => {
+router.delete("/:id", auth, async (req, res) => {
   const accessoire = await Accessoire.findByIdAndRemove(req.params.id);
   fs.unlinkSync(accessoire.image);
 
