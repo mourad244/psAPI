@@ -1,4 +1,4 @@
-const winston = require("winston");
+const logger = require("../startup/logging");
 const mongoose = require("mongoose");
 
 module.exports = function () {
@@ -9,5 +9,5 @@ module.exports = function () {
       useCreateIndex: true,
       useFindAndModify: false,
     })
-    .then(() => winston.info("Connected to MongoDB..."));
+    .then(() => logger.info("Connected to MongoDB..."));
 };

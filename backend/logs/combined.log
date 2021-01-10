@@ -1,0 +1,25 @@
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-01-10 20:59:29"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-01-10 20:59:29"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-01-10 21:00:32"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-01-10 21:00:32"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-01-10 21:02:37"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-01-10 21:02:37"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-01-10 21:05:45"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-01-10 21:05:45"}
+{"message":"Could not get the products","level":"error","timestamp":"2021-01-10 21:05:49"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-01-10 21:06:24"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-01-10 21:06:24"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-01-10 21:06:47"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-01-10 21:06:47"}
+{"message":"Could not get the products","level":"error","timestamp":"2021-01-10 21:06:48"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-01-10 21:07:05"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-01-10 21:07:05"}
+{"message":"Could not get the products","level":"error","timestamp":"2021-01-10 21:07:07"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-01-10 21:07:56"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-01-10 21:07:56"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-01-10 21:08:28"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-01-10 21:08:28"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-01-10 21:08:45"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-01-10 21:08:45"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-01-10 21:09:05"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-01-10 21:09:05"}

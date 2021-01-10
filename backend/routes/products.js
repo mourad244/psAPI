@@ -7,13 +7,13 @@ const { ProductType } = require("../models/productType");
 const uploadImage = require("../middleware/uploadImage");
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
+const logger = require("../startup/logging");
 const fs = require("fs");
 const path = require("path");
 
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  throw new Error("Could not get the products");
   const products = await Product.find()
     .populate("type", "name")
     .populate("producttype", "name")
