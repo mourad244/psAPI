@@ -28,3 +28,4 @@ module.exports = function (app) {
   app.use("/psapi/auth", auth);
   app.use(error);
 };
+//add
