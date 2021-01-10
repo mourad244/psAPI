@@ -13,6 +13,7 @@ const path = require("path");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
+  throw new Error("Could not get the products");
   const products = await Product.find()
     .populate("type", "name")
     .populate("producttype", "name")
