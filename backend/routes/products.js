@@ -17,35 +17,10 @@ router.get("/", async (req, res) => {
     .populate("type", "name")
     .populate("producttype", "name")
     .populate("avis", "comment client")
-    .select("-__v -commands")
+    .select("-__v ")
     .sort("name");
 
   res.send(products);
-});
-
-router.put("/:id", auth, async (req, res) => {
-  await uploadImage(req, res);
-
-  const { error } = validate(req.body);
-
-  if (error) return res.status(400).send(error.details[0].message);
-
-  const product = await Product.findOne({ _id: req.params.id });
-  if (req.file) {
-    fs.unlinkSync(product.image);
-    product.image = req.file.path;
-  }
-  const { name, type, description } = req.body;
-  if (name) product.name = name;
-  if (type) product.type = type;
-  if (description) product.description = description;
-
-  await product.save();
-
-  if (!product)
-    return res.status(404).send("le produit avec cette id n'existe pas.");
-
-  res.send(product);
 });
 
 router.post("/", auth, async (req, res) => {
@@ -77,6 +52,33 @@ router.post("/", auth, async (req, res) => {
   }
 });
 
+router.put("/:id", auth, async (req, res) => {
+  await uploadImage(req, res);
+
+  const { error } = validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const productType = await ProductType.findById(req.body.type);
+  if (!productType) return res.status(400).send("Invalide type of product");
+
+  const product = await Product.findOne({ _id: req.params.id });
+  if (req.file) {
+    fs.unlinkSync(product.image);
+    product.image = req.file.path;
+  }
+  const { name, type, description } = req.body;
+  if (name) product.name = name;
+  if (type) product.type = type;
+  if (description) product.description = description;
+
+  await product.save();
+
+  if (!product)
+    return res.status(404).send("le produit avec cette id n'existe pas.");
+
+  res.send(product);
+});
+
 router.delete("/:id", auth, async (req, res) => {
   const product = await Product.findByIdAndRemove(req.params.id);
   fs.unlinkSync(product.image);
@@ -87,34 +89,8 @@ router.delete("/:id", auth, async (req, res) => {
   res.send(product);
 });
 
-router.get("/:id" /* , auth */, async (req, res) => {
+router.get("/:id", async (req, res) => {
   const product = await Product.findById(req.params.id).select("-__v");
-
-  if (!product)
-    return res.status(404).send("le product avec cette id n'existe pas.");
-
-  res.send(product);
-});
-
-router.put("/:id", auth, async (req, res) => {
-  await uploadImage(req, res);
-
-  const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
-
-  const productType = await ProductType.findById(req.body.categorie);
-  if (!productType) return res.status(400).send("Invalid categorie product.");
-
-  const product = await Product.findByIdAndUpdate(
-    req.params.id,
-    {
-      name: req.body.name,
-      image: req.body.image,
-      type: productType,
-      description: req.body.description,
-    },
-    { new: true }
-  );
 
   if (!product)
     return res.status(404).send("le product avec cette id n'existe pas.");

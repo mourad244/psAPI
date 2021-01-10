@@ -21,9 +21,7 @@ const productSchema = new mongoose.Schema({
     type: String,
     minlength: 3,
   },
-  commands: {
-    type: Array,
-  },
+
   avis: [
     {
       type: mongoose.Schema.ObjectId,
