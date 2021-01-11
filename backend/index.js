@@ -2,6 +2,7 @@ const winston = require("winston");
 const express = require("express");
 const logger = require("./startup/logging");
 const config = require("config");
+require("dotenv").config();
 const app = express();
 
 require("./startup/routes")(app);

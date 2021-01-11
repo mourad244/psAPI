@@ -5,10 +5,9 @@ module.exports = function () {
   const db = config.get("db");
   mongoose
     .connect(db, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-      useFindAndModify: false,
+      host: process.env.DB_HOST,
+      username: process.env.DB_USER,
+      password: process.env.DB_PASS,
     })
     .then(() => logger.info("Connected to MongoDB..."));
 };
