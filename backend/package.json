@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": "v14.15.4"
   },
   "author": "",
   "license": "ISC",
@@ -13,6 +16,7 @@
     "@hapi/joi-date": "^2.0.1",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
     "config": "^3.3.3",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
@@ -20,6 +24,7 @@
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
     "filepond": "^4.25.1",
+    "helmet": "^4.3.1",
     "joi": "^17.3.0",
     "joi-date-extensions": "^1.2.0",
     "joi-objectid": "^3.0.1",
