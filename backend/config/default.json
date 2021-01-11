@@ -1,6 +1,6 @@
 {
   "jwtPrivateKey": "",
   "db": "mongodb://localhost/psapi",
-  "port": "3900",
+  "port": "process.env.PORT || 3900",
   "requiresAuth": false
 }

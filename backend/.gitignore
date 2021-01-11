@@ -3,3 +3,5 @@ logs/
 coverage/
 logfile.log
 .DS_Store
+/*.env
+npm-debug.log
