@@ -1,3 +1,4 @@
 {
-  "jwtPrivateKey":"psapi_jwtPrivateKey"
+  "jwtPrivateKey": "psapi_jwtPrivateKey",
+  "db": "psapi_db"
 }
