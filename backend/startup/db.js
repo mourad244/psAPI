@@ -4,9 +4,11 @@ const config = require("config");
 module.exports = function () {
   const db = config.get("db");
   mongoose
-    .connect({
-      username: process.env.DB_ADMIN_USERNAME, //techbos
-      password: process.env.DB_ADMIN_PASSWORD, // Pa$$w0rd
+    .connect(db, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true,
+      useFindAndModify: false,
     })
     .then(() => logger.info("Connected to MongoDB..."));
 };

@@ -1,6 +1,6 @@
 {
   "jwtPrivateKey": "unsecureKey",
-  "db": "mongodb://localhost/psapi",
+  "db": "mongodb+srv://mourad244:uKO9t6WrYSvh90CC@cluster0.x0xqe.mongodb.net/psapi?retryWrites=true&w=majority",
   "port": "3900",
   "requiresAuth": false
 }
