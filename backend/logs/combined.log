@@ -117,3 +117,5 @@
 {"message":"Connected to MongoDB...","level":"info","timestamp":"2021-01-11 20:01:49"}
 {"message":"Listening on port 3900...","level":"info","timestamp":"2021-01-11 20:06:55"}
 {"message":"Connected to MongoDB...","level":"info","timestamp":"2021-01-11 20:06:55"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-01-11 20:10:01"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-01-11 20:10:01"}
