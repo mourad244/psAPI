@@ -12,7 +12,7 @@ require("./startup/validation")();
 require("./startup/prod")(app);
 
 const port = process.env.PORT || config.get("port");
-if (process.env.ENV === "production")
+if (process.env.NODE_ENV === "production")
   console.log("-------------------done-------------------------");
 const server = app.listen(port, () =>
   logger.info(`Listening on port ${port}...`)
