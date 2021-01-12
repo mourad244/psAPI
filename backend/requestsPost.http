@@ -1,12 +1,12 @@
 
-# // -----------------------------add Accessoire ---------------------
-# POST http://localhost:3900/psapi/accessoires
-# content-type: application/json
+// -----------------------------add Accessoire ---------------------
+POST http://localhost:3900/psapi/accessoires
+content-type: application/json
 
-# {
-#     "name": "ANGULAIRE PASSANT",
-#     "image": "images/accessoires/angulairePassant.jpg"
-# }
+{
+    "name": "ANGULAIRE PASSANT",
+    "image": "images/accessoires/angulairePassant.jpg"
+}
 
 // -----------------------------add categorie service ---------------------
 
