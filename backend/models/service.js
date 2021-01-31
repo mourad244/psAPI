@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
+const { string } = require("joi");
 
 const Service = mongoose.model(
   "Service",
@@ -12,6 +13,14 @@ const Service = mongoose.model(
       minlength: 3,
       maxlength: 50,
     },
+    desc1: {
+      type: String,
+      minlength: 3,
+    },
+    desc2: {
+      type: String,
+      minlength: 3,
+    },
     caracteristiques: {
       type: Array,
       trim: true,
@@ -19,13 +28,11 @@ const Service = mongoose.model(
     images: {
       type: Array,
     },
-    accessoires: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Accessoire",
-        trim: true,
-      },
-    ],
+    accessoires: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Accessoire",
+      trim: true,
+    },
     categorie: {
       type: mongoose.Schema.Types.ObjectId,
       trim: true,
@@ -38,6 +45,8 @@ const Service = mongoose.model(
 function validateAccessoire(accessoire) {
   const schema = Joi.object({
     name: Joi.string().min(3).max(50).required(),
+    desc1: Joi.string().min(3),
+    desc2: Joi.string().min(3),
     caracteristiques: Joi.array(),
     images: Joi.array(),
     accessoires: Joi.array().items(Joi.objectId()),

@@ -12,8 +12,7 @@ const categorieSvcSchema = new mongoose.Schema({
     required: true,
   },
   largeDesc: {
-    type: String,
-    minlength: 5,
+    type: Array,
   },
   image: {
     type: String,
@@ -25,7 +24,7 @@ function validateCategorieSvc(categorieSvc) {
   const schema = Joi.object({
     name: Joi.string().min(3).max(50).required(),
     smallDesc: Joi.string().min(3).max(255).required(),
-    largeDesc: Joi.string().min(3),
+    largeDesc: Joi.array().items(Joi.string().min(5)),
     image: Joi.string().min(5).max(255),
   });
   return schema.validate(categorieSvc);

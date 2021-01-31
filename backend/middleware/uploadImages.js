@@ -1,24 +1,40 @@
 const util = require("util");
 const path = require("path");
 const multer = require("multer");
+const { array } = require("joi");
+const maxsize = 2 * 1024 * 1024;
 
 var storage = multer.diskStorage({
-  destination: (req, file, callback) => {
-    callback(null, "images");
+  destination: (req, file, cb) => {
+    cb(null, "images");
   },
-  filename: (req, file, callback) => {
-    const match = ["image/png", "image/jpeg", "image/jpg"];
-
-    if (match.indexOf(file.mimetype) === -1) {
-      var message = `${file.originalname} n'est pas valide. seuls les formats png/jpeg/jpg acceptés.`;
-      return callback(message, null);
-    }
-
-    var filename = Date.now() + path.extname(file.originalname);
-    callback(null, filename);
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      Date.now() +
+        "-" +
+        Math.round(Math.random() * 1e2) +
+        path.extname(file.originalname)
+    );
   },
 });
+const fileFilter = (req, file, cb) => {
+  if (
+    file.mimetype == "image/jpeg" ||
+    file.mimetype == "image/png" ||
+    file.mimetype == "image/jpg"
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
 
-var uploadImages = multer({ storage: storage }).array("images", 10);
-var uploadImagesMiddleware = util.promisify(uploadImages);
+const uploadImages = multer({
+  storage: storage,
+  limits: maxsize,
+  fileFilter: fileFilter,
+}).array("images", 10);
+
+const uploadImagesMiddleware = util.promisify(uploadImages);
 module.exports = uploadImagesMiddleware;
