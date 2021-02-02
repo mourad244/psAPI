@@ -5,6 +5,7 @@ const { validateAvi, Avi } = require("../models/avi");
 const { validateClient, Client } = require("../models/client");
 const { ProductType } = require("../models/productType");
 const uploadImage = require("../middleware/uploadImages");
+const deleteImages = require("../middleware/deleteImages");
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
 const logger = require("../startup/logging");
@@ -32,10 +33,16 @@ router.post("/", auth, async (req, res) => {
     }
 
     const { error } = validate(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) {
+      deleteImages(req.file);
+      return res.status(400).send(error.details[0].message);
+    }
 
     const productType = await ProductType.findById(req.body.type);
-    if (!productType) return res.status(400).send("Invalid type of product.");
+    if (!productType) {
+      deleteImages(req.file);
+      return res.status(400).send("Invalid type of product.");
+    }
 
     const product = new Product({
       name: req.body.name,

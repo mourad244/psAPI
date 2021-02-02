@@ -2,6 +2,7 @@ const { ProductCategorie, validate } = require("../models/productCategorie");
 const auth = require("../middleware/auth");
 const express = require("express");
 const uploadImage = require("../middleware/uploadImage");
+const deleteImages = require("../middleware/deleteImages");
 const router = express.Router();
 const fs = require("fs");
 
@@ -17,7 +18,10 @@ router.post("/", auth, async (req, res) => {
     await uploadImage(req, res);
 
     const { error } = validate(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) {
+      deleteImages(req.file);
+      return res.status(400).send(error.details[0].message);
+    }
 
     const productCategorie = new ProductCategorie({
       name: req.body.name,

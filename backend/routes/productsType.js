@@ -5,6 +5,7 @@ const { ProductType, validate } = require("../models/productType");
 const { ProductCategorie } = require("../models/productCategorie");
 const auth = require("../middleware/auth");
 const uploadImage = require("../middleware/uploadImage");
+const deleteImages = require("../middleware/deleteImages");
 // const admin = require("../middleware/admin");
 const validateObjectId = require("../middleware/validateObjectId");
 const _ = require("lodash");
@@ -24,13 +25,18 @@ router.post("/", auth, async (req, res) => {
     await uploadImage(req, res);
 
     const { error } = validate(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) {
+      deleteImages(req.file);
+      return res.status(400).send(error.details[0].message);
+    }
 
     const productCategorie = await ProductCategorie.findById(
       req.body.categorie
     );
-    if (!productCategorie)
+    if (!productCategorie) {
+      deleteImages(req.file);
       return res.status(400).send("Invalid categorie product.");
+    }
 
     const { name, description, categorie } = req.body;
     const productType = new ProductType({

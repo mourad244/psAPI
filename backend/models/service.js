@@ -49,7 +49,7 @@ function validateAccessoire(accessoire) {
     desc2: Joi.string().min(3),
     caracteristiques: Joi.array(),
     images: Joi.array(),
-    accessoires: Joi.array().items(Joi.objectId()),
+    accessoires: Joi.objectId(),
     categorie: Joi.objectId().required(),
   });
 

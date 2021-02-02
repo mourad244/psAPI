@@ -3,14 +3,21 @@ const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
 const express = require("express");
 const uploadImage = require("../middleware/uploadImage");
+const deleteImages = require("../middleware/deleteImages");
+
 const router = express.Router();
 const fs = require("fs");
 
 router.get("/", async (req, res) => {
-  const categoriesSvc = await CategorieSvc.find().select("-__v").sort("name");
+  const categoriesSvc = await CategorieSvc.find()
+    .select("-assistance -largeDesc -__v")
+    .sort("name");
   res.send(categoriesSvc);
 });
 
+/* router.get("/images/:id", (req, res) => {
+  res.sendFile("/images/" + `${req.params.id}`);
+}); */
 router.post("/", auth, async (req, res) => {
   try {
     await uploadImage(req, res);
@@ -19,12 +26,16 @@ router.post("/", auth, async (req, res) => {
     }
 
     const { error } = validate(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
+    if (error) {
+      deleteImages(req.file);
+      return res.status(400).send(error.details[0].message);
+    }
 
     const categorieSvc = new CategorieSvc({
       name: req.body.name,
       smallDesc: req.body.smallDesc,
       largeDesc: req.body.largeDesc,
+      assistance: req.body.assistance,
       image: req.file.path,
     });
     await categorieSvc.save();
