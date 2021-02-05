@@ -1,7 +1,6 @@
 const util = require("util");
 const path = require("path");
 const multer = require("multer");
-const { array } = require("joi");
 const maxsize = 2 * 1024 * 1024;
 
 var storage = multer.diskStorage({

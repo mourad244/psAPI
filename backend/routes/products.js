@@ -4,7 +4,7 @@ const { Product, validate } = require("../models/product");
 const { validateAvi, Avi } = require("../models/avi");
 const { validateClient, Client } = require("../models/client");
 const { ProductType } = require("../models/productType");
-const uploadImage = require("../middleware/uploadImages");
+const uploadImage = require("../middleware/uploadImage");
 const deleteImages = require("../middleware/deleteImages");
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
@@ -40,7 +40,6 @@ router.post("/", auth, async (req, res) => {
 
     const productType = await ProductType.findById(req.body.type);
     if (!productType) {
-      deleteImages(req.file);
       return res.status(400).send("Invalid type of product.");
     }
 
@@ -62,8 +61,9 @@ router.post("/", auth, async (req, res) => {
 
 router.put("/:id", auth, async (req, res) => {
   await uploadImage(req, res);
-
+  // console.log(req.body);
   const { error } = validate(req.body);
+  console.log(error);
   if (error) return res.status(400).send(error.details[0].message);
 
   const productType = await ProductType.findById(req.body.type);

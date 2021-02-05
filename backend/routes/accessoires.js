@@ -7,7 +7,7 @@ const router = express.Router();
 const fs = require("fs");
 
 router.get("/", async (req, res) => {
-  const accessoires = await Accessoire.find().select("-__v").sort("name");
+  let accessoires = await Accessoire.find().select("-__v").sort("name");
   res.send(accessoires);
 });
 
