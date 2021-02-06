@@ -6,6 +6,7 @@ class Form extends Component {
   state = {
     data: {},
     error: {},
+    inputItem: "",
   };
   validate = () => {
     const options = { abortEarly: false };
@@ -59,6 +60,17 @@ class Form extends Component {
     this.setState({ data, errors });
   };
 
+  handleDeleteItem = (e, array, i) => {
+    e.preventDefault();
+
+    // console.log(array);
+    // console.log(i);
+    const data = { ...this.state.data };
+    data[array].splice(i, 1);
+    console.log(data);
+    this.setState({ data });
+  };
+
   renderButton(label) {
     return (
       <button disabled={this.validate()} className="btn btn-primary">
@@ -95,21 +107,55 @@ class Form extends Component {
       />
     );
   }
-  renderList(name, label) {
-    const { data, errors } = this.state;
+  updateInputItem = (e) => {
+    this.setState({ inputItem: e.target.value });
+  };
+  addItem = (e, inputItem) => {
+    e.preventDefault();
+    const errors = { ...this.state.errors };
 
-    return data[name].map((item, index) => {
-      return (
-        <Input
-          name={name}
-          key={name + index}
-          value={item}
-          label={label + " " + index}
-          onChange={(e) => this.handleChangeList(e, index)}
-          error={errors[name]}
-        />
-      );
-    });
+    const errorMessage = this.validateProperty(e.currentTarget);
+    if (errorMessage) errors[e.currentTarget.name] = errorMessage;
+    else delete errors[e.currentTarget.name];
+
+    const data = { ...this.state.data };
+
+    data[e.currentTarget.name].push(inputItem);
+    console.log(data);
+    this.setState({ data, errors });
+  };
+  renderList(name, label) {
+    const { data, errors, inputItem } = this.state;
+    return (
+      <div>
+        {data[name].map((item, index) => {
+          return (
+            <div key={index}>
+              <Input
+                name={name}
+                key={name + index}
+                value={item}
+                label={label + " " + (index + 1)}
+                onChange={(e) => this.handleChangeList(e, index)}
+                error={errors[name]}
+              />
+              <button
+                onClick={(e) => this.handleDeleteItem(e, name, index)}
+                className="btn btn-danger btn-sm"
+              >
+                delete {label + " " + (index + 1)}
+              </button>
+            </div>
+          );
+        })}
+        <div>
+          <input placeholder={`add ${name}`} onChange={this.updateInputItem} />
+          <button name={name} onClick={(e) => this.addItem(e, inputItem)}>
+            add
+          </button>
+        </div>
+      </div>
+    );
   }
 
   // renderDate(name, label) {

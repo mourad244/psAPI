@@ -72,9 +72,7 @@ class ProductForm extends Form {
         <h1>Formulaire Product</h1>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput("name", "Nom")}
-          {/* {this.renderList("avis", "Avis")} */}
           {this.renderList("description", "Description")}
-          {/* {this.renderInput("", "Nouvelle description")} */}
           {this.renderSelect("type", "Type de produit", this.state.types)}
           {this.renderButton("Sauvegarder")}
         </form>
