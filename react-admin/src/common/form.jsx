@@ -2,11 +2,15 @@ import React, { Component } from "react";
 import Joi from "joi-browser";
 import Input from "./input";
 import Select from "./select";
+import axios from "axios";
+import { apiUrl } from "../config.json";
 class Form extends Component {
   state = {
     data: {},
     error: {},
     inputItem: "",
+    sendFile: false,
+    selectedFile: null,
   };
   validate = () => {
     const options = { abortEarly: false };
@@ -27,15 +31,6 @@ class Form extends Component {
     return error ? error.details[0].message : null;
   };
 
-  handleSubmit = (e) => {
-    e.preventDefault();
-    const errors = this.validate();
-    this.setState({ errors: errors || {} });
-
-    if (errors) return;
-
-    this.doSubmit();
-  };
   handleChangeList = ({ currentTarget: input }, index) => {
     const errors = { ...this.state.errors };
 
@@ -70,6 +65,110 @@ class Form extends Component {
     console.log(data);
     this.setState({ data });
   };
+  addItem = (e, inputItem) => {
+    e.preventDefault();
+    const errors = { ...this.state.errors };
+
+    const errorMessage = this.validateProperty(e.currentTarget);
+    if (errorMessage) errors[e.currentTarget.name] = errorMessage;
+    else delete errors[e.currentTarget.name];
+
+    const data = { ...this.state.data };
+
+    data[e.currentTarget.name].push(inputItem);
+    console.log(data);
+    this.setState({ data, errors });
+  };
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    const errors = this.validate();
+    this.setState({ errors: errors || {} });
+    const sendFile = this.state.sendFile;
+    if (sendFile) {
+      console.log(sendFile);
+      return this.fileUploadHandler();
+    }
+
+    if (errors) return;
+
+    this.doSubmit();
+  };
+  fileUploadHandler = () => {
+    const fd = new FormData();
+    let data = { ...this.state.data };
+    delete data._id;
+    console.log(data);
+    for (const item in data) {
+      if (Array.isArray(data[item])) {
+        // data[item].map((i, index) => console.log(item + `[${index}]`));
+        data[item].map((i, index) => fd.append(item + `[${index}]`, i));
+      } else {
+        fd.append(item, data[item]);
+      }
+    }
+    fd.append("image", this.state.selectedFile, this.state.selectedFile.name);
+
+    if (this.props.match.params.id)
+      axios.put(apiUrl + `/products/${this.props.match.params.id}`, fd);
+
+    // else{
+    //   axios.post()
+    // }
+  };
+
+  fileSelectedHandler = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      this.setState({ selectedFile: event.target.files[0] });
+      this.setState({ sendFile: true });
+      // let img = event.target.files[0];
+      // let formData = new FormData();
+      // let data = { ...this.state.data };
+      // for (const item in data) {
+      //   formData.append(item, data[item]);
+      // }
+      // formData.append("image", img);
+      // // data.map((item) => {
+      // //
+      // // });
+      // console.log(formData);
+      // this.setState({ formData });
+    }
+  };
+  renderImage(name, label, type = "file") {
+    const { data, errors } = this.state;
+    return (
+      <div>
+        <div>
+          <div>
+            <img src={data.image} />
+            <h1>Select Image</h1>
+            <input
+              type={type}
+              name={name}
+              label={label}
+              onChange={this.fileSelectedHandler}
+              error={errors[name]}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+  renderInput(name, label, type = "text") {
+    const { data, errors } = this.state;
+
+    return (
+      <Input
+        type={type}
+        name={name}
+        value={data[name]}
+        label={label}
+        onChange={this.handleChange}
+        error={errors[name]}
+      />
+    );
+  }
 
   renderButton(label) {
     return (
@@ -93,37 +192,10 @@ class Form extends Component {
     );
   }
 
-  renderInput(name, label, type = "text") {
-    const { data, errors } = this.state;
-
-    return (
-      <Input
-        type={type}
-        name={name}
-        value={data[name]}
-        label={label}
-        onChange={this.handleChange}
-        error={errors[name]}
-      />
-    );
-  }
   updateInputItem = (e) => {
     this.setState({ inputItem: e.target.value });
   };
-  addItem = (e, inputItem) => {
-    e.preventDefault();
-    const errors = { ...this.state.errors };
 
-    const errorMessage = this.validateProperty(e.currentTarget);
-    if (errorMessage) errors[e.currentTarget.name] = errorMessage;
-    else delete errors[e.currentTarget.name];
-
-    const data = { ...this.state.data };
-
-    data[e.currentTarget.name].push(inputItem);
-    console.log(data);
-    this.setState({ data, errors });
-  };
   renderList(name, label) {
     const { data, errors, inputItem } = this.state;
     return (
@@ -149,7 +221,12 @@ class Form extends Component {
           );
         })}
         <div>
-          <input placeholder={`add ${name}`} onChange={this.updateInputItem} />
+          <Input
+            name={name}
+            placeholder={`add ${name}`}
+            onChange={this.updateInputItem}
+            error={errors[name]}
+          />
           <button name={name} onClick={(e) => this.addItem(e, inputItem)}>
             add
           </button>

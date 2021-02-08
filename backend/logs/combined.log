@@ -1100,3 +1100,71 @@
 {"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-06 12:46:06"}
 {"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-06 20:13:07"}
 {"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-06 20:13:07"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 12:19:33"}
+{"error":{"message":"connect ECONNREFUSED 127.0.0.1:27017","reason":{"type":"Unknown","setName":null,"maxSetVersion":null,"maxElectionId":null,"servers":{},"stale":false,"compatible":true,"compatibilityError":null,"logicalSessionTimeoutMinutes":null,"heartbeatFrequencyMS":10000,"localThresholdMS":15,"commonWireVersion":null}},"level":"error","message":"uncaughtException: connect ECONNREFUSED 127.0.0.1:27017\nMongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017\n    at NativeConnection.Connection.openUri (/home/mourad/git_workspace/psAPI/backend/node_modules/mongoose/lib/connection.js:830:32)\n    at /home/mourad/git_workspace/psAPI/backend/node_modules/mongoose/lib/index.js:342:10\n    at /home/mourad/git_workspace/psAPI/backend/node_modules/mongoose/lib/helpers/promiseOrCallback.js:31:5\n    at new Promise (<anonymous>)\n    at promiseOrCallback (/home/mourad/git_workspace/psAPI/backend/node_modules/mongoose/lib/helpers/promiseOrCallback.js:30:10)\n    at Mongoose._promiseOrCallback (/home/mourad/git_workspace/psAPI/backend/node_modules/mongoose/lib/index.js:1129:10)\n    at Mongoose.connect (/home/mourad/git_workspace/psAPI/backend/node_modules/mongoose/lib/index.js:341:20)\n    at module.exports (/home/mourad/git_workspace/psAPI/backend/startup/db.js:8:6)\n    at Object.<anonymous> (/home/mourad/git_workspace/psAPI/backend/index.js:9:24)\n    at Module._compile (internal/modules/cjs/loader.js:1063:30)\n    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1092:10)\n    at Module.load (internal/modules/cjs/loader.js:928:32)\n    at Function.Module._load (internal/modules/cjs/loader.js:769:14)\n    at Function.executeUserEntryPoint [as runMain] (internal/modules/run_main.js:72:12)\n    at internal/main/run_main_module.js:17:47","stack":"MongooseServerSelectionError: connect ECONNREFUSED 127.0.0.1:27017\n    at NativeConnection.Connection.openUri (/home/mourad/git_workspace/psAPI/backend/node_modules/mongoose/lib/connection.js:830:32)\n    at /home/mourad/git_workspace/psAPI/backend/node_modules/mongoose/lib/index.js:342:10\n    at /home/mourad/git_workspace/psAPI/backend/node_modules/mongoose/lib/helpers/promiseOrCallback.js:31:5\n    at new Promise (<anonymous>)\n    at promiseOrCallback (/home/mourad/git_workspace/psAPI/backend/node_modules/mongoose/lib/helpers/promiseOrCallback.js:30:10)\n    at Mongoose._promiseOrCallback (/home/mourad/git_workspace/psAPI/backend/node_modules/mongoose/lib/index.js:1129:10)\n    at Mongoose.connect (/home/mourad/git_workspace/psAPI/backend/node_modules/mongoose/lib/index.js:341:20)\n    at module.exports (/home/mourad/git_workspace/psAPI/backend/startup/db.js:8:6)\n    at Object.<anonymous> (/home/mourad/git_workspace/psAPI/backend/index.js:9:24)\n    at Module._compile (internal/modules/cjs/loader.js:1063:30)\n    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1092:10)\n    at Module.load (internal/modules/cjs/loader.js:928:32)\n    at Function.Module._load (internal/modules/cjs/loader.js:769:14)\n    at Function.executeUserEntryPoint [as runMain] (internal/modules/run_main.js:72:12)\n    at internal/main/run_main_module.js:17:47","exception":true,"date":"Sun Feb 07 2021 12:20:02 GMT+0100 (GMT+01:00)","process":{"pid":24879,"uid":1000,"gid":1000,"cwd":"/home/mourad/git_workspace/psAPI/backend","execPath":"/home/mourad/.nvm/versions/node/v14.15.4/bin/node","version":"v14.15.4","argv":["/home/mourad/.nvm/versions/node/v14.15.4/bin/node","/home/mourad/git_workspace/psAPI/backend/index.js","index.js"],"memoryUsage":{"rss":61816832,"heapTotal":23404544,"heapUsed":21033336,"external":19808721,"arrayBuffers":18280670}},"os":{"loadavg":[4.95,3.73,1.87],"uptime":429},"trace":[{"column":32,"file":"/home/mourad/git_workspace/psAPI/backend/node_modules/mongoose/lib/connection.js","function":"NativeConnection.Connection.openUri","line":830,"method":"openUri","native":false},{"column":10,"file":"/home/mourad/git_workspace/psAPI/backend/node_modules/mongoose/lib/index.js","function":null,"line":342,"method":null,"native":false},{"column":5,"file":"/home/mourad/git_workspace/psAPI/backend/node_modules/mongoose/lib/helpers/promiseOrCallback.js","function":null,"line":31,"method":null,"native":false},{"column":null,"file":null,"function":"new Promise","line":null,"method":null,"native":false},{"column":10,"file":"/home/mourad/git_workspace/psAPI/backend/node_modules/mongoose/lib/helpers/promiseOrCallback.js","function":"promiseOrCallback","line":30,"method":null,"native":false},{"column":10,"file":"/home/mourad/git_workspace/psAPI/backend/node_modules/mongoose/lib/index.js","function":"Mongoose._promiseOrCallback","line":1129,"method":"_promiseOrCallback","native":false},{"column":20,"file":"/home/mourad/git_workspace/psAPI/backend/node_modules/mongoose/lib/index.js","function":"Mongoose.connect","line":341,"method":"connect","native":false},{"column":6,"file":"/home/mourad/git_workspace/psAPI/backend/startup/db.js","function":"module.exports","line":8,"method":"exports","native":false},{"column":24,"file":"/home/mourad/git_workspace/psAPI/backend/index.js","function":null,"line":9,"method":null,"native":false},{"column":30,"file":"internal/modules/cjs/loader.js","function":"Module._compile","line":1063,"method":"_compile","native":false},{"column":10,"file":"internal/modules/cjs/loader.js","function":"Module._extensions..js","line":1092,"method":".js","native":false},{"column":32,"file":"internal/modules/cjs/loader.js","function":"Module.load","line":928,"method":"load","native":false},{"column":14,"file":"internal/modules/cjs/loader.js","function":"Module._load","line":769,"method":"_load","native":false},{"column":12,"file":"internal/modules/run_main.js","function":"Function.executeUserEntryPoint [as runMain]","line":72,"method":"executeUserEntryPoint [as runMain]","native":false},{"column":47,"file":"internal/main/run_main_module.js","function":null,"line":17,"method":null,"native":false}],"timestamp":"2021-02-07 12:20:02"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 12:20:26"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 12:20:27"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 12:21:15"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 12:21:15"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 13:16:27"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 13:16:27"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 13:16:54"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 13:16:54"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 13:17:35"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 13:17:35"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 13:18:09"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 13:18:09"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 14:28:05"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 14:28:05"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 14:29:30"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 14:29:30"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 14:32:59"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 14:32:59"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 14:33:33"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 14:33:33"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 14:34:19"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 14:34:19"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 19:36:04"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 19:36:04"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 19:46:12"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 19:46:12"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 19:46:33"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 19:46:33"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 19:50:10"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 19:50:10"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 19:50:36"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 19:50:36"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 19:50:59"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 19:50:59"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 19:51:27"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 19:51:27"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 19:51:39"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 19:51:39"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 19:51:52"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 19:51:52"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 19:52:23"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 19:52:23"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 20:04:10"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 20:04:10"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 20:06:20"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 20:06:20"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 20:06:37"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 20:06:37"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 20:47:52"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 20:47:52"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 20:53:37"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 20:53:37"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 20:54:06"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 20:54:06"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 20:54:26"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 20:54:26"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 20:59:03"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 20:59:03"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 21:00:13"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 21:00:13"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 21:01:10"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 21:01:10"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 21:01:19"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 21:01:19"}
+{"message":"Listening on port 3900...","level":"info","timestamp":"2021-02-07 21:01:40"}
+{"message":"Connected to MongoDB...","level":"info","timestamp":"2021-02-07 21:01:41"}

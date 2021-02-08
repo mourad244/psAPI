@@ -4,7 +4,7 @@ const { Product, validate } = require("../models/product");
 const { validateAvi, Avi } = require("../models/avi");
 const { validateClient, Client } = require("../models/client");
 const { ProductType } = require("../models/productType");
-const uploadImage = require("../middleware/uploadImage");
+const uploadImage = require("../middleware/uploadImages");
 const deleteImages = require("../middleware/deleteImages");
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
@@ -61,17 +61,25 @@ router.post("/", auth, async (req, res) => {
 
 router.put("/:id", auth, async (req, res) => {
   await uploadImage(req, res);
-  // console.log(req.body);
   const { error } = validate(req.body);
-  console.log(error);
-  if (error) return res.status(400).send(error.details[0].message);
+
+  if (error) {
+    console.log(error);
+    // console.log(error);
+    return res.status(400).send(error.details[0].message);
+  }
 
   const productType = await ProductType.findById(req.body.type);
   if (!productType) return res.status(400).send("Invalide type of product");
 
   const product = await Product.findOne({ _id: req.params.id });
   if (req.file) {
-    fs.unlinkSync(product.image);
+    if (product.image)
+      try {
+        fs.unlinkSync(product.image);
+      } catch (error) {
+        console.log("delete path from db for an inexsiting file");
+      }
     product.image = req.file.path;
   }
   const { name, type, description } = req.body;

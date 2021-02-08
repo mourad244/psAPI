@@ -5,7 +5,6 @@ class TableBody extends Component {
   renderCell = (item, column) => {
     if (column.date) return column.date(item);
     if (column.content) return column.content(item);
-    console.log(item);
     return _.get(item, column.path);
   };
 

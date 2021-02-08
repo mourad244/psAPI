@@ -13,15 +13,18 @@ class ProductForm extends Form {
       name: "",
       description: [],
       avis: [],
+      image: "",
     },
     errors: {},
     types: [],
+    formData: "",
   };
 
   schema = {
     _id: Joi.string(),
     name: Joi.string().required().label("Nom"),
     avis: Joi.array().label("avis"),
+    image: Joi.string(),
     description: Joi /* .array() */.label("description"),
     type: Joi.string().required().label("type de produit"),
   };
@@ -72,6 +75,7 @@ class ProductForm extends Form {
         <h1>Formulaire Product</h1>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput("name", "Nom")}
+          {this.renderImage("image", "Image")}
           {this.renderList("description", "Description")}
           {this.renderSelect("type", "Type de produit", this.state.types)}
           {this.renderButton("Sauvegarder")}

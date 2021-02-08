@@ -33,7 +33,7 @@ const uploadImages = multer({
   storage: storage,
   limits: maxsize,
   fileFilter: fileFilter,
-}).array("images", 10);
+}).array("image", 10);
 
 const uploadImagesMiddleware = util.promisify(uploadImages);
 module.exports = uploadImagesMiddleware;

@@ -7,8 +7,7 @@ import LoginForm from "./components/loginForm";
 import RegisterForm from "./components/registerForm";
 import Products from "./components/products";
 import ProductForm from "./components/productForm";
-import Permissions from "./components/permissions";
-import PermissionForm from "./components/permissionForm";
+
 import auth from "./services/authService";
 import Logout from "./components/logout";
 import "react-toastify/dist/ReactToastify.css";
