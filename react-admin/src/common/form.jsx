@@ -10,6 +10,7 @@ class Form extends Component {
   state = {
     data: {},
     error: {},
+    form: "",
     inputItem: "",
     sendFile: false,
     selectedFile: null,
@@ -98,6 +99,8 @@ class Form extends Component {
   };
   fileUploadHandler = () => {
     const fd = new FormData();
+    const form = this.state.form;
+    console.log(form);
     let data = { ...this.state.data };
     delete data._id;
     for (const item in data) {
@@ -110,13 +113,11 @@ class Form extends Component {
     }
     fd.append("image", this.state.selectedFile, this.state.selectedFile.name);
 
-    if (this.props.match.params.id)
-      axios.put(apiUrl + `/products/${this.props.match.params.id}`, fd);
+    this.props.match.params.id
+      ? axios.put(apiUrl + `/${form}/${this.props.match.params.id}`, fd)
+      : axios.post(apiUrl + `/${form}`, fd);
 
-    // else{
-    //   axios.post()
-    // }
-    this.props.history.push("/products");
+    this.props.history.push(`/${form}`);
   };
 
   fileSelectedHandler = (event) => {

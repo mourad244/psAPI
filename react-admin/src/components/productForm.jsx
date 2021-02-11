@@ -17,7 +17,7 @@ class ProductForm extends Form {
     },
     errors: {},
     types: [],
-    // formData: "",
+    form: "products",
   };
 
   schema = {
