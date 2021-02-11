@@ -9,6 +9,7 @@ const deleteImages = require("../middleware/deleteImages");
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
 const logger = require("../startup/logging");
+const _ = require("lodash");
 const fs = require("fs");
 const path = require("path");
 
@@ -28,13 +29,13 @@ router.get("/", async (req, res) => {
 router.post("/", auth, async (req, res) => {
   try {
     await uploadImage(req, res);
-    if (req.file == undefined) {
-      return res.status(400).send({ message: "Please upload an image!" });
+    if (req.files == undefined) {
+      return res.status(400).send({ message: "Please upload an images!" });
     }
 
     const { error } = validate(req.body);
     if (error) {
-      deleteImages(req.file);
+      deleteImages(req.files);
       return res.status(400).send(error.details[0].message);
     }
 
@@ -47,24 +48,24 @@ router.post("/", auth, async (req, res) => {
       name: req.body.name,
       description: req.body.description,
       type: req.body.type,
-      image: req.file.path,
+      images: req.files.path,
     });
 
     await product.save();
     res.send(product);
   } catch (err) {
     res.status(500).send({
-      message: `Could not upload the image: ${req.file.originalname}. ${err}`,
+      message: `Could not upload the images: ${req.files.originalname}. ${err}`,
     });
   }
 });
 
 router.put("/:id", auth, async (req, res) => {
   await uploadImage(req, res);
+
   const { error } = validate(req.body);
 
   if (error) {
-    console.log(error);
     // console.log(error);
     return res.status(400).send(error.details[0].message);
   }
@@ -73,20 +74,21 @@ router.put("/:id", auth, async (req, res) => {
   if (!productType) return res.status(400).send("Invalide type of product");
 
   const product = await Product.findOne({ _id: req.params.id });
-  if (req.file) {
-    if (product.image)
-      try {
-        fs.unlinkSync(product.image);
-      } catch (error) {
-        console.log("delete path from db for an inexsiting file");
-      }
-    product.image = req.file.path;
+  if (req.files) {
+    // console.log(req.files);
+    // if (product.images)
+    //   try {
+    //     // fs.unlinkSync(product.images);
+    //     deleteImages(req.files);
+    //   } catch (error) {
+    //     console.log("delete path from db for an inexsiting files");
+    //   }
+    product.images.push(..._.map(req.files, "path"));
   }
   const { name, type, description } = req.body;
   if (name) product.name = name;
   if (type) product.type = type;
   if (description) product.description = description;
-
   await product.save();
 
   if (!product)
@@ -97,8 +99,8 @@ router.put("/:id", auth, async (req, res) => {
 
 router.delete("/:id", auth, async (req, res) => {
   const product = await Product.findByIdAndRemove(req.params.id);
-  fs.unlinkSync(product.image);
-
+  // fs.unlinkSync(product.images);
+  deleteImages(req.files);
   if (!product)
     return res.status(404).send("le product avec cette id n'existe pas.");
 

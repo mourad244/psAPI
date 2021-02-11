@@ -1,9 +1,11 @@
 const winston = require("winston");
 const express = require("express");
 const logger = require("./startup/logging");
+
 const config = require("config");
 require("dotenv").config();
 const app = express();
+
 app.use("/images", express.static(__dirname + "/images"));
 require("./startup/routes")(app);
 require("./startup/db")();

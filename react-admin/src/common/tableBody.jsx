@@ -1,10 +1,21 @@
 import React, { Component } from "react";
 import _ from "lodash";
+import DisplayImage from "./displayImage";
 
 class TableBody extends Component {
   renderCell = (item, column) => {
     if (column.date) return column.date(item);
     if (column.content) return column.content(item);
+    if (column.path == "images") {
+      return (
+        <DisplayImage
+          name={column.path}
+          label={column.label}
+          images={item[column.path]}
+          height="40"
+        />
+      );
+    }
     return _.get(item, column.path);
   };
 

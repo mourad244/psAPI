@@ -13,6 +13,8 @@ class ProductsTable extends Component {
     },
     { path: "type.name", label: "Type" },
     { path: "description", label: "Description" },
+    { path: "images", label: "Images" },
+
     {
       key: "delete",
       content: (product) => (

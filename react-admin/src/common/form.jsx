@@ -4,6 +4,8 @@ import Input from "./input";
 import Select from "./select";
 import axios from "axios";
 import { apiUrl } from "../config.json";
+import DisplayImage from "./displayImage";
+import UploadImage from "./uploadImage";
 class Form extends Component {
   state = {
     data: {},
@@ -11,6 +13,7 @@ class Form extends Component {
     inputItem: "",
     sendFile: false,
     selectedFile: null,
+    image: null,
   };
   validate = () => {
     const options = { abortEarly: false };
@@ -86,7 +89,6 @@ class Form extends Component {
     this.setState({ errors: errors || {} });
     const sendFile = this.state.sendFile;
     if (sendFile) {
-      console.log(sendFile);
       return this.fileUploadHandler();
     }
 
@@ -98,7 +100,6 @@ class Form extends Component {
     const fd = new FormData();
     let data = { ...this.state.data };
     delete data._id;
-    console.log(data);
     for (const item in data) {
       if (Array.isArray(data[item])) {
         // data[item].map((i, index) => console.log(item + `[${index}]`));
@@ -115,12 +116,14 @@ class Form extends Component {
     // else{
     //   axios.post()
     // }
+    this.props.history.push("/products");
   };
 
   fileSelectedHandler = (event) => {
     if (event.target.files && event.target.files[0]) {
       this.setState({ selectedFile: event.target.files[0] });
       this.setState({ sendFile: true });
+      this.setState({ image: URL.createObjectURL(event.target.files[0]) });
       // let img = event.target.files[0];
       // let formData = new FormData();
       // let data = { ...this.state.data };
@@ -135,23 +138,33 @@ class Form extends Component {
       // this.setState({ formData });
     }
   };
-  renderImage(name, label, type = "file") {
+  renderImage(name, label) {
     const { data, errors } = this.state;
+    const height = 200;
     return (
       <div>
-        <div>
-          <div>
-            <img src={data.image} />
-            <h1>Select Image</h1>
-            <input
-              type={type}
-              name={name}
-              label={label}
-              onChange={this.fileSelectedHandler}
-              error={errors[name]}
-            />
-          </div>
-        </div>
+        <DisplayImage
+          name={name}
+          images={data[name]}
+          label={label}
+          height={height}
+        />
+      </div>
+    );
+  }
+  renderUpload(name, label, type = "file") {
+    const { image } = this.state;
+    const height = 200;
+    return (
+      <div>
+        <UploadImage
+          name={name}
+          image={image}
+          height={height}
+          type={type}
+          label={label}
+          onChange={this.fileSelectedHandler}
+        />
       </div>
     );
   }

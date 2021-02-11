@@ -13,18 +13,18 @@ class ProductForm extends Form {
       name: "",
       description: [],
       avis: [],
-      image: "",
+      images: [],
     },
     errors: {},
     types: [],
-    formData: "",
+    // formData: "",
   };
 
   schema = {
     _id: Joi.string(),
     name: Joi.string().required().label("Nom"),
     avis: Joi.array().label("avis"),
-    image: Joi.string(),
+    images: Joi.array(),
     description: Joi /* .array() */.label("description"),
     type: Joi.string().required().label("type de produit"),
   };
@@ -59,6 +59,7 @@ class ProductForm extends Form {
       _id: product._id,
       name: product.name,
       avis: product.avis,
+      images: product.images,
       description: product.description,
       type: product.type,
     };
@@ -75,7 +76,9 @@ class ProductForm extends Form {
         <h1>Formulaire Product</h1>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput("name", "Nom")}
-          {this.renderImage("image", "Image")}
+          {this.state.data.images.length != 0 &&
+            this.renderImage("images", "Image")}
+          {this.renderUpload("image", "upload image")}
           {this.renderList("description", "Description")}
           {this.renderSelect("type", "Type de produit", this.state.types)}
           {this.renderButton("Sauvegarder")}
