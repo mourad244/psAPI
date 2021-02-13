@@ -1,18 +1,23 @@
 import React, { Component } from "react";
 import { Route, Redirect, Switch } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import NotFound from "./components/notFound";
+
 import NavBar from "./common/navBar";
-import LoginForm from "./components/loginForm";
-import RegisterForm from "./components/registerForm";
 import Products from "./components/products";
 import ProductForm from "./components/productForm";
-
-import auth from "./services/authService";
+import ProductsType from "./components/productsType";
+import ProductTypeForm from "./components/productTypeForm";
+import ProductsCategorie from "./components/productsCategorie";
+import ProductCategorieForm from "./components/productCategorieForm";
+import NotFound from "./components/notFound";
+import LoginForm from "./components/loginForm";
 import Logout from "./components/logout";
+import RegisterForm from "./components/registerForm";
+import auth from "./services/authService";
+import ProtectedRoute from "./common/protectedRoute";
+
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-import ProtectedRoute from "./common/protectedRoute";
 
 class App extends Component {
   state = {};
@@ -33,11 +38,34 @@ class App extends Component {
             <Route path="/register" component={RegisterForm} />
             <Route path="/login" component={LoginForm} />
             <Route path="/logout" component={Logout} />
+
+            <ProtectedRoute
+              path="/productsCategorie/:id"
+              component={ProductCategorieForm}
+            />
+            <Route
+              path="/productscategorie"
+              render={(props) => (
+                <ProductsCategorie {...props} user={this.state.user} />
+              )}
+            />
+            <ProtectedRoute
+              path="/productstype/:id"
+              component={ProductTypeForm}
+            />
+            <Route
+              path="/productstype"
+              render={(props) => (
+                <ProductsType {...props} user={this.state.user} />
+              )}
+            />
+
             <ProtectedRoute path="/products/:id" component={ProductForm} />
             <Route
               path="/products"
               render={(props) => <Products {...props} user={this.state.user} />}
             />
+
             <Route path="/not-found" component={NotFound} />
             <Redirect from="/" exact to="/products" />
             <Redirect to="/not-found" />

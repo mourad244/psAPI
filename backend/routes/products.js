@@ -4,21 +4,31 @@ const { Product, validate } = require("../models/product");
 const { validateAvi, Avi } = require("../models/avi");
 const { validateClient, Client } = require("../models/client");
 const { ProductType } = require("../models/productType");
-const uploadImage = require("../middleware/uploadImages");
+const uploadImages = require("../middleware/uploadImages");
 const deleteImages = require("../middleware/deleteImages");
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
 const logger = require("../startup/logging");
+
+const validateObjectId = require("../middleware/validateObjectId");
 const _ = require("lodash");
 const fs = require("fs");
 const path = require("path");
 
 const router = express.Router();
 
+// nested populate
+//.populate({
+//   path: 'avis',
+//   populate: {
+//     path: 'avis.client',
+//     model: 'Client'
+//   }
+// })
+
 router.get("/", async (req, res) => {
   const products = await Product.find()
     .populate("type", "name")
-    .populate("producttype", "name")
     .populate("avis", "comment client")
     .select("-__v ")
     .sort("name");
@@ -28,7 +38,7 @@ router.get("/", async (req, res) => {
 
 router.post("/", auth, async (req, res) => {
   try {
-    await uploadImage(req, res);
+    await uploadImages(req, res);
     if (req.files == undefined) {
       return res.status(400).send({ message: "Please upload an images!" });
     }
@@ -41,13 +51,15 @@ router.post("/", auth, async (req, res) => {
 
     const productType = await ProductType.findById(req.body.type);
     if (!productType) {
+      deleteImages(req.files);
       return res.status(400).send("Invalid type of product.");
     }
 
+    const { name, description, type } = req.body;
     const product = new Product({
-      name: req.body.name,
-      description: req.body.description,
-      type: req.body.type,
+      name: name,
+      description: description,
+      type: type,
       images: req.files.path,
     });
 
@@ -61,14 +73,10 @@ router.post("/", auth, async (req, res) => {
 });
 
 router.put("/:id", auth, async (req, res) => {
-  await uploadImage(req, res);
+  await uploadImages(req, res);
 
   const { error } = validate(req.body);
-
-  if (error) {
-    // console.log(error);
-    return res.status(400).send(error.details[0].message);
-  }
+  if (error) return res.status(400).send(error.details[0].message);
 
   const productType = await ProductType.findById(req.body.type);
   if (!productType) return res.status(400).send("Invalide type of product");
@@ -93,6 +101,16 @@ router.put("/:id", auth, async (req, res) => {
 
   if (!product)
     return res.status(404).send("le produit avec cette id n'existe pas.");
+  res.send(product);
+});
+
+router.get("/:id", validateObjectId, async (req, res) => {
+  const product = await Product.findById(req.params.id)
+    // .populate("type", "name")
+    .select("-__v");
+
+  if (!product)
+    return res.status(404).send("le product avec cette id n'existe pas.");
 
   res.send(product);
 });
@@ -100,16 +118,7 @@ router.put("/:id", auth, async (req, res) => {
 router.delete("/:id", auth, async (req, res) => {
   const product = await Product.findByIdAndRemove(req.params.id);
   // fs.unlinkSync(product.images);
-  deleteImages(req.files);
-  if (!product)
-    return res.status(404).send("le product avec cette id n'existe pas.");
-
-  res.send(product);
-});
-
-router.get("/:id", async (req, res) => {
-  const product = await Product.findById(req.params.id).select("-__v");
-
+  if (product.images) deleteImages(product.images);
   if (!product)
     return res.status(404).send("le product avec cette id n'existe pas.");
 
@@ -117,18 +126,18 @@ router.get("/:id", async (req, res) => {
 });
 
 router.put("/avis/:id", async (req, res) => {
-  const { error1 } = validateClient(req.body.client);
-  if (error1) return res.status(400).send(error.details[0].message);
-
   const { error2 } = validateAvi(req.body);
+
   if (error2) return res.status(400).send(error.details[0].message);
 
-  const client = new Client({
-    name: req.body.client.name,
-    email: req.body.client.email,
-  });
+  let client = await Client.findOne({ email: req.body.client });
+  if (!client) {
+    client = new Client({
+      email: req.body.client,
+    });
 
-  await client.save();
+    await client.save();
+  }
 
   const avi = new Avi({
     client: client._id,
@@ -148,8 +157,9 @@ router.get("/avis/:id", async (req, res) => {
   const product = await Product.findById(req.params.id);
   const avis = await Avi.find({ _id: { $in: product.avis } })
     .populate("product", "name -_id")
+    .populate("client", "email")
     .select("-__v")
-    .sort("note");
+    .sort("date");
   res.send(avis);
 });
 

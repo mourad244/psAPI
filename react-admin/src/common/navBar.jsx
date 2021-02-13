@@ -21,8 +21,14 @@ const NavBar = ({ user }) => {
 
       <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div className="navbar-nav">
+          <NavLink className="anv-item nav-link " to="/productscategorie">
+            Categorie de produits
+          </NavLink>
+          <NavLink className="anv-item nav-link " to="/productstype">
+            Type de produits
+          </NavLink>
           <NavLink className="anv-item nav-link " to="/products">
-            Products
+            Produits
           </NavLink>
 
           {!user && (

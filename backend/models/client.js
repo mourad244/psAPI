@@ -2,12 +2,6 @@ const Joi = require("joi");
 const mongoose = require("mongoose");
 
 const clientSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    minlength: 5,
-    maxlength: 50,
-  },
   email: {
     type: String,
     required: true,
@@ -20,7 +14,6 @@ const Client = mongoose.model("Client", clientSchema);
 
 function validateClient(client) {
   const schema = Joi.object({
-    name: Joi.string().min(5).max(50).required(),
     email: Joi.string().min(5).max(50).required(),
   });
 

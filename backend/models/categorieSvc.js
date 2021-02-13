@@ -21,7 +21,7 @@ const categorieSvcSchema = new mongoose.Schema({
     type: String,
   },
 });
-const CategorieSvc = mongoose.model("categorieSvc", categorieSvcSchema);
+const CategorieSvc = mongoose.model("CategorieSvc", categorieSvcSchema);
 
 function validateCategorieSvc(categorieSvc) {
   const schema = Joi.object({

@@ -7,6 +7,7 @@ const productsType = require("../routes/productsType");
 const clients = require("../routes/clients");
 const products = require("../routes/products");
 const users = require("../routes/users");
+const devis = require("../routes/devis");
 const auth = require("../routes/auth");
 const error = require("../middleware/error");
 const cors = require("cors");
@@ -25,6 +26,7 @@ module.exports = function (app) {
   app.use("/psapi/services", services);
   app.use("/psapi/clients", clients);
   app.use("/psapi/users", users);
+  app.use("/psapi/devis", devis);
   app.use("/psapi/auth", auth);
   app.use(error);
 };

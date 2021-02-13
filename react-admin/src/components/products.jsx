@@ -1,13 +1,20 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
-import ProductsTable from "./productsTable";
-import ListGroup from "../common/listGroup";
-import Pagination from "../common/pagination";
+
 import { getProducts, deleteProduct } from "../services/productService";
-import { getTypes } from "../services/typeService";
-import { paginate } from "../utils/paginate";
+import { getProductsType } from "../services/productTypeService";
+
+import Pagination from "../common/pagination";
+import ListGroup from "../common/listGroup";
+import ProductsTable from "./productsTable";
+
 import SearchBox from "../common/searchBox";
+
+import { paginate } from "../utils/paginate";
+
+import { Link } from "react-router-dom";
+
+import { toast } from "react-toastify";
+
 import _ from "lodash";
 
 class Products extends Component {
@@ -21,7 +28,7 @@ class Products extends Component {
     sortColumn: { path: "name", order: "asc" },
   };
   async componentDidMount() {
-    const { data } = await getTypes();
+    const { data } = await getProductsType();
     const types = [{ _id: "", name: "Tous les types" }, ...data];
 
     const { data: products } = await getProducts();

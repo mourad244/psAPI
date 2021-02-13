@@ -4,7 +4,7 @@ const express = require("express");
 const { ProductType, validate } = require("../models/productType");
 const { ProductCategorie } = require("../models/productCategorie");
 const auth = require("../middleware/auth");
-const uploadImage = require("../middleware/uploadImage");
+const uploadImages = require("../middleware/uploadImages");
 const deleteImages = require("../middleware/deleteImages");
 // const admin = require("../middleware/admin");
 const validateObjectId = require("../middleware/validateObjectId");
@@ -22,11 +22,13 @@ router.get("/", async (req, res) => {
 
 router.post("/", auth, async (req, res) => {
   try {
-    await uploadImage(req, res);
-
+    await uploadImages(req, res);
+    if (req.files == undefined) {
+      return res.status(400).send({ message: "Please upload an images!" });
+    }
     const { error } = validate(req.body);
     if (error) {
-      deleteImages(req.file);
+      deleteImages(req.files);
       return res.status(400).send(error.details[0].message);
     }
 
@@ -34,7 +36,7 @@ router.post("/", auth, async (req, res) => {
       req.body.categorie
     );
     if (!productCategorie) {
-      deleteImages(req.file);
+      deleteImages(req.files);
       return res.status(400).send("Invalid categorie product.");
     }
 
@@ -43,46 +45,53 @@ router.post("/", auth, async (req, res) => {
       name: name,
       description: description,
       categorie: categorie,
-      image: req.file != undefined ? req.file.path : "",
+      // images: req.files != undefined ? req.file.path : "",
+      images: req.files.path,
     });
+
     await productType.save();
     res.send(productType);
   } catch (err) {
     res.status(500).send({
-      message: `Could not upload the image: ${req.file.originalname}. ${err}`,
+      message: `Could not upload the image: ${req.files.originalname}. ${err}`,
     });
   }
 });
 
 router.put("/:id", auth, async (req, res) => {
-  await uploadImage(req, res);
+  await uploadImages(req, res);
 
   const { error } = validate(req.body);
-
-  console.log(error);
   if (error) return res.status(400).send(error.details[0].message);
-  const productType = await ProductType.findOne({ _id: req.params.id });
 
-  if (req.file) {
-    if (productType.image) fs.unlinkSync(productType.image);
-    productType.image = req.file.path;
+  const productCategorie = await ProductCategorie.findById(req.body.categorie);
+  if (!productCategorie)
+    return res.status(400).send("Invalid categorie product.");
+
+  const productType = await ProductType.findOne({ _id: req.params.id });
+  if (req.files) {
+    // if (productType.image) fs.unlinkSync(productType.image);
+    // productType.image = req.file.path;
+    productType.images.push(..._.map(req.files, "path"));
   }
 
   const { name, description, categorie } = req.body;
-  if (name) {
-    productType.name = name;
-  }
+  if (name) productType.name = name;
   if (description) productType.description = description;
+  if (categorie) productType.categorie = categorie;
 
-  if (categorie) {
-    const productCategorie = await ProductCategorie.findById(
-      req.body.categorie
-    );
-    if (!productCategorie)
-      return res.status(400).send("Invalid categorie product.");
-    productType.categorie = categorie;
-  }
   await productType.save();
+  if (!productType)
+    return res
+      .status(404)
+      .send("le type de ce produit avec cette id n'existe pas.");
+  res.send(productType);
+});
+
+router.get("/:id", validateObjectId, async (req, res) => {
+  const productType = await ProductType.findById(req.params.id)
+    // .populate("categorie", "name")
+    .select("-__v");
 
   if (!productType)
     return res
@@ -93,21 +102,8 @@ router.put("/:id", auth, async (req, res) => {
 });
 
 router.delete("/:id", auth, async (req, res) => {
-  if (productType.image) fs.unlinkSync(productType.image);
   const productType = await ProductType.findByIdAndRemove(req.params.id);
-
-  if (!productType)
-    return res
-      .status(404)
-      .send("The productType with the given ID was not found.");
-
-  res.send(productType);
-});
-
-router.get("/:id", validateObjectId, async (req, res) => {
-  const productType = await ProductType.findById(req.params.id)
-    .populate("categorie", "name")
-    .select("-__v");
+  if (productType.images) deleteImages(productType.images);
 
   if (!productType)
     return res

@@ -1,7 +1,7 @@
 import React from "react";
 import Joi from "joi-browser";
 import Form from "../common/form";
-import { getTypes } from "../services/typeService";
+import { getProductsType } from "../services/productTypeService";
 import { getProduct, saveProduct } from "../services/productService";
 import _ from "lodash";
 import Input from "../common/input";
@@ -30,7 +30,7 @@ class ProductForm extends Form {
   };
 
   async populateTypes() {
-    const { data: types } = await getTypes();
+    const { data: types } = await getProductsType();
 
     this.setState({ types });
   }

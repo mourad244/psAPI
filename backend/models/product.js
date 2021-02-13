@@ -14,7 +14,7 @@ const productSchema = new mongoose.Schema({
   },
   type: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "productType",
+    ref: "ProductType",
     required: true,
   },
   description: {
@@ -23,13 +23,13 @@ const productSchema = new mongoose.Schema({
 
   avis: [
     {
-      type: mongoose.Schema.ObjectId,
-      ref: "avi",
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Avi",
     },
   ],
 });
 
-const Product = mongoose.model("product", productSchema);
+const Product = mongoose.model("Product", productSchema);
 
 function validateProduct(product) {
   const schema = Joi.object({

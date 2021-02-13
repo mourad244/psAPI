@@ -120,8 +120,8 @@ router.delete("/:id", auth, async (req, res) => {
 
 router.get("/:id", validateObjectId, async (req, res) => {
   const service = await Service.findById(req.params.id)
-    .populate("accessoires", "-__v")
-    .populate("categorie", "name")
+    .populate("Accessoire", "-__v")
+    .populate("Categorie", "name")
     .select("-__v");
 
   if (!service)

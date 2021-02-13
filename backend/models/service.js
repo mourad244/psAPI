@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
-const { string } = require("joi");
 
 const Service = mongoose.model(
   "Service",
@@ -36,7 +35,7 @@ const Service = mongoose.model(
     categorie: {
       type: mongoose.Schema.Types.ObjectId,
       trim: true,
-      ref: "categorieSvc",
+      ref: "CategorieSvc",
       required: true,
     },
   })

@@ -8,29 +8,27 @@ const productTypeSchema = new mongoose.Schema({
     minlength: 3,
     maxlength: 50,
   },
-  image: {
-    type: String,
+  images: {
+    type: Array,
   },
   description: {
     type: String,
-    default: null,
-
     maxlength: 255,
   },
   categorie: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "productCategorie",
+    ref: "ProductCategorie",
     required: true,
   },
 });
 
-const ProductType = mongoose.model("productType", productTypeSchema);
+const ProductType = mongoose.model("ProductType", productTypeSchema);
 
 function validateProductType(productType) {
   const schema = Joi.object({
     name: Joi.string().min(3).max(50).required(),
-    image: Joi.string(),
-    description: Joi.string().allow(null, "").max(255),
+    images: Joi.array(),
+    description: Joi.string().max(255),
     categorie: Joi.objectId().required(),
   });
 

@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const schemaAvi = new mongoose.Schema({
   client: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "client",
+    ref: "Client",
   },
   note: Number,
   comment: {
@@ -12,18 +12,18 @@ const schemaAvi = new mongoose.Schema({
   },
   product: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "product",
+    ref: "Product",
     required: true,
+  },
+  date: {
+    type: Date,
+    required: true,
+    default: Date.now,
   },
 });
 
-const Avi = mongoose.model("avi", schemaAvi);
+const Avi = mongoose.model("Avi", schemaAvi);
 function validateAvi(avi) {
-  // const client = Joi.object().keys({
-  //   name: Joi.string().min(3).max(255).required(),
-  //   email: Joi.string().min(3).max(255).required(),
-  // });
-
   const schema = Joi.object({
     // client: client,
     note: Joi.number(),
