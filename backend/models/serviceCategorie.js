@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
 
-const categorieSvcSchema = new mongoose.Schema({
+const serviceCategorieSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -17,23 +17,23 @@ const categorieSvcSchema = new mongoose.Schema({
   assistance: {
     type: Array,
   },
-  image: {
-    type: String,
+  images: {
+    type: Array,
   },
 });
-const CategorieSvc = mongoose.model("CategorieSvc", categorieSvcSchema);
+const ServiceCategorie = mongoose.model("CategorieSvc", serviceCategorieSchema);
 
-function validateCategorieSvc(categorieSvc) {
+function validateServiceCategorie(categorieSvc) {
   const schema = Joi.object({
     name: Joi.string().min(3).max(50).required(),
     smallDesc: Joi.string().min(3).max(255).required(),
     largeDesc: Joi.array().items(Joi.string().min(5)),
-    image: Joi.string().min(5).max(255),
+    images: Joi.array(),
     assistance: Joi.array().items(Joi.string().min(5)),
   });
   return schema.validate(categorieSvc);
 }
 
-exports.categorieSvcSchema = categorieSvcSchema;
-exports.CategorieSvc = CategorieSvc;
-exports.validate = validateCategorieSvc;
+exports.categorieSvcSchema = serviceCategorieSchema;
+exports.ServiceCategorie = ServiceCategorie;
+exports.validate = validateServiceCategorie;

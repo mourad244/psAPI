@@ -1,22 +1,20 @@
-const moment = require("moment");
 const mongoose = require("mongoose");
 const express = require("express");
 const { Service, validate } = require("../models/service");
-const { CategorieSvc } = require("../models/categorieSvc");
-const auth = require("../middleware/auth");
-const admin = require("../middleware/admin");
-const validateObjectId = require("../middleware/validateObjectId");
+const { ServiceCategorie } = require("../models/serviceCategorie");
 const uploadImages = require("../middleware/uploadImages");
 const deleteImages = require("../middleware/deleteImages");
-const { Accessoire } = require("../models/accessoire");
-const router = express.Router();
+const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
+
+const validateObjectId = require("../middleware/validateObjectId");
 const _ = require("lodash");
 const fs = require("fs");
-const { Console } = require("console");
+
+const router = express.Router();
 
 router.get("/", async (req, res) => {
   const services = await Service.find()
-    .populate("accessoires", "-__v")
     .populate("categorie", "name")
     .select("-__v")
     .sort("name");
@@ -27,9 +25,7 @@ router.post("/", auth, async (req, res) => {
   try {
     await uploadImages(req, res);
     if (req.files == undefined) {
-      return res
-        .status(400)
-        .send({ message: "Please upload multiple images!" });
+      return res.status(400).send({ message: "Please upload an image!" });
     }
 
     const { error } = validate(req.body);
@@ -38,30 +34,26 @@ router.post("/", auth, async (req, res) => {
       return res.status(400).send(error.details[0].message);
     }
 
-    const accessoires = await Accessoire.findById(req.body.accessoires);
+    const serviceCategorie = await ServiceCategorie.findById(
+      req.body.categorie
+    );
 
-    if (!accessoires) {
-      deleteImages(req.files);
-      return res.status(400).send("Invalid accessoires.");
-    }
-
-    const categorieSvc = await CategorieSvc.findById(req.body.categorie);
-
-    if (!categorieSvc) {
+    if (!serviceCategorie) {
       deleteImages(req.files);
       return res.status(400).send("Invalid categorie service.");
     }
 
+    const { name, caracteristiques, desc1, desc2, categorie } = req.body;
+    console.log(_.filter(req.files, { fieldname: "image" }).path);
     const service = new Service({
-      name: req.body.name,
-      caracteristiques: req.body.caracteristiques,
-      desc1: req.body.desc1,
-      desc2: req.body.desc2,
-      images: _.map(req.files, "path"),
+      name: name,
+      caracteristiques: caracteristiques,
+      desc1: desc1,
+      desc2: desc2,
+
+      images: req.files.path,
       accessoires: accessoires,
-      categorie: {
-        _id: categorieSvc._id,
-      },
+      categorie: categorie,
     });
 
     await service.save();
@@ -79,8 +71,9 @@ router.put("/:id", auth, async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const categorieSvc = await CategorieSvc.findById(req.body.categorie);
-  if (!categorieSvc) return res.status(400).send("Invalid categorie service.");
+  const serviceCategorie = await ServiceCategorie.findById(req.body.categorie);
+  if (!serviceCategorie)
+    return res.status(400).send("Invalid categorie service.");
 
   const service = await Service.findOne({ _id: req.params.id });
   if (req.files) {
@@ -89,7 +82,7 @@ router.put("/:id", auth, async (req, res) => {
   const { name, caracteristiques, accessoires } = req.body;
 
   service.name = name;
-  service.categorie = categorieSvc;
+  service.categorie = serviceCategorie;
 
   if (caracteristiques) service.caracteristiques.push(...caracteristiques);
 

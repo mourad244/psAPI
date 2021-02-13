@@ -1,46 +1,43 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import ProductsCategorieTable from "./productsCategorieTable";
+import ServicesCategorieTable from "./servicesCategorieTable";
 import Pagination from "../common/pagination";
 import {
-  getProductsCategorie,
-  deleteProductCategorie,
-} from "../services/productCategorieService";
+  getServicesCategorie,
+  deleteServiceCategorie,
+} from "../services/serviceCategorieService";
 import { paginate } from "../utils/paginate";
 import SearchBox from "../common/searchBox";
 import _ from "lodash";
 
-class ProductsCategorie extends Component {
+class ServicesCategorie extends Component {
   state = {
-    productsCategorie: [],
+    servicesCategorie: [],
     currentPage: 1,
     pageSize: 5,
     searchQuery: "",
     sortColumn: { path: "name", order: "asc" },
   };
   async componentDidMount() {
-    const { data: productsCategorie } = await getProductsCategorie();
-    // productsCategorie.forEach((productCategorie) => {
-    //   delete productCategorie.avis;
-    // });
-    // console.log(productsCategorie);
-    this.setState({ productsCategorie });
+    const { data: servicesCategorie } = await getServicesCategorie();
+
+    this.setState({ servicesCategorie });
   }
 
-  handleDelete = async (productCategorie) => {
-    const originalProductsCategorie = this.state.productsCategorie;
-    const productsCategorie = originalProductsCategorie.filter(
-      (m) => m._id !== productCategorie._id
+  handleDelete = async (serviceCategorie) => {
+    const originalServicesCategorie = this.state.servicesCategorie;
+    const servicesCategorie = originalServicesCategorie.filter(
+      (m) => m._id !== serviceCategorie._id
     );
-    this.setState({ productsCategorie });
+    this.setState({ servicesCategorie });
 
     try {
-      await deleteProductCategorie(productCategorie._id);
+      await deleteServiceCategorie(serviceCategorie._id);
     } catch (ex) {
       if (ex.response && ex.response.status === 404)
-        toast.error("productCategorie déja supprimé");
-      this.setState({ productsCategorie: originalProductsCategorie });
+        toast.error("serviceCategorie déja supprimé");
+      this.setState({ servicesCategorie: originalServicesCategorie });
     }
   };
 
@@ -64,30 +61,30 @@ class ProductsCategorie extends Component {
       currentPage,
       sortColumn,
       searchQuery,
-      productsCategorie: allProductsCategorie,
+      servicesCategorie: allServicesCategorie,
     } = this.state;
 
-    let filtered = allProductsCategorie;
+    let filtered = allServicesCategorie;
     if (searchQuery)
-      filtered = allProductsCategorie.filter((m) =>
+      filtered = allServicesCategorie.filter((m) =>
         m.name.toLowerCase().startsWith(searchQuery.toLowerCase())
       );
 
     const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
 
-    const productsCategorie = paginate(sorted, currentPage, pageSize);
-    return { totalCount: filtered.length, data: productsCategorie };
+    const servicesCategorie = paginate(sorted, currentPage, pageSize);
+    return { totalCount: filtered.length, data: servicesCategorie };
   };
 
   render() {
-    const { length: count } = this.state.productsCategorie;
+    const { length: count } = this.state.servicesCategorie;
     const { pageSize, currentPage, sortColumn, searchQuery } = this.state;
     const { user } = this.props;
 
     if (count === 0)
-      return <p>aucune categorie de produit dans la base de donnée</p>;
+      return <p>aucune categorie de service dans la base de donnée</p>;
 
-    const { totalCount, data: productsCategorie } = this.getPagedData();
+    const { totalCount, data: servicesCategorie } = this.getPagedData();
     return (
       <div className="row">
         {/* <div className="col-3">
@@ -96,27 +93,27 @@ class ProductsCategorie extends Component {
         <div className="col">
           {user && (
             <Link
-              to={"/productsCategorie/new"}
+              to={"/servicesCategorie/new"}
               className="btn btn-primary"
               style={{ marginBottom: 20 }}
             >
-              Nouvelle Categorie de Produit
+              Nouvelle Categorie de Service
             </Link>
           )}
 
           <p>
-            il ya {totalCount} categorie de produits dans la base de données
+            il ya {totalCount} categorie de services dans la base de données
           </p>
           <SearchBox
             value={searchQuery}
             onChange={this.handleSearch}
           ></SearchBox>
-          <ProductsCategorieTable
-            productsCategorie={productsCategorie}
+          <ServicesCategorieTable
+            servicesCategorie={servicesCategorie}
             sortColumn={sortColumn}
             onDelete={this.handleDelete}
             onSort={this.handleSort}
-          ></ProductsCategorieTable>
+          ></ServicesCategorieTable>
           <Pagination
             itemsCount={totalCount}
             pageSize={pageSize}
@@ -129,4 +126,4 @@ class ProductsCategorie extends Component {
   }
 }
 
-export default ProductsCategorie;
+export default ServicesCategorie;

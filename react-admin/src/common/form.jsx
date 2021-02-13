@@ -101,7 +101,7 @@ class Form extends Component {
   fileUploadHandler = () => {
     const fd = new FormData();
     const form = this.state.form;
-    console.log(form);
+
     let data = { ...this.state.data };
     delete data._id;
     for (const item in data) {
@@ -114,7 +114,7 @@ class Form extends Component {
     }
     fd.append("image", this.state.selectedFile, this.state.selectedFile.name);
 
-    this.props.match.params.id
+    this.props.match.params.id && this.props.match.params.id != "new"
       ? axios.put(apiUrl + `/${form}/${this.props.match.params.id}`, fd)
       : axios.post(apiUrl + `/${form}`, fd);
 

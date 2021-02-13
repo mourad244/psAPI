@@ -7,7 +7,6 @@ const deleteImages = require("../middleware/deleteImages");
 const validateObjectId = require("../middleware/validateObjectId");
 const _ = require("lodash");
 const router = express.Router();
-const fs = require("fs");
 
 router.get("/", async (req, res) => {
   const productsCategorie = await ProductCategorie.find()

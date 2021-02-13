@@ -62,7 +62,7 @@ class ProductCategorieForm extends Form {
   render() {
     return (
       <div>
-        <h1>Formulaire Product Type</h1>
+        <h1>Formulaire categorie de produit </h1>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput("name", "Nom")}
           {this.state.data.images &&

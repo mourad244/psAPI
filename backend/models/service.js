@@ -28,9 +28,7 @@ const Service = mongoose.model(
       type: Array,
     },
     accessoires: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Accessoire",
-      trim: true,
+      type: Array,
     },
     categorie: {
       type: mongoose.Schema.Types.ObjectId,
@@ -41,19 +39,19 @@ const Service = mongoose.model(
   })
 );
 
-function validateAccessoire(accessoire) {
+function validateService(service) {
   const schema = Joi.object({
     name: Joi.string().min(3).max(50).required(),
+    categorie: Joi.objectId().required(),
     desc1: Joi.string().min(3),
     desc2: Joi.string().min(3),
     caracteristiques: Joi.array(),
     images: Joi.array(),
-    accessoires: Joi.objectId(),
-    categorie: Joi.objectId().required(),
+    accessoires: Joi.array(),
   });
 
-  return schema.validate(accessoire);
+  return schema.validate(service);
 }
 
 exports.Service = Service;
-exports.validate = validateAccessoire;
+exports.validate = validateService;

@@ -40,7 +40,7 @@ router.post("/", auth, async (req, res) => {
   try {
     await uploadImages(req, res);
     if (req.files == undefined) {
-      return res.status(400).send({ message: "Please upload an images!" });
+      return res.status(400).send({ message: "Please upload an image!" });
     }
 
     const { error } = validate(req.body);
@@ -60,7 +60,7 @@ router.post("/", auth, async (req, res) => {
       name: name,
       description: description,
       type: type,
-      images: req.files.path,
+      images: req.files.map((file) => file.path),
     });
 
     await product.save();
@@ -74,7 +74,7 @@ router.post("/", auth, async (req, res) => {
 
 router.put("/:id", auth, async (req, res) => {
   await uploadImages(req, res);
-
+  console.log(_.filter(req.files, { fieldname: "image" }).path);
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -117,12 +117,13 @@ router.get("/:id", validateObjectId, async (req, res) => {
 
 router.delete("/:id", auth, async (req, res) => {
   const product = await Product.findByIdAndRemove(req.params.id);
-  // fs.unlinkSync(product.images);
+  // if (!product)
+  //   return res.status(404).send("le product avec cette id n'existe pas.");
   if (product.images) deleteImages(product.images);
-  if (!product)
-    return res.status(404).send("le product avec cette id n'existe pas.");
+  // console.log(product);
+  // fs.unlinkSync(product.images);
 
-  res.send(product);
+  // res.send(product);
 });
 
 router.put("/avis/:id", async (req, res) => {

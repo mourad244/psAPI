@@ -3,6 +3,8 @@ import { Route, Redirect, Switch } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 import NavBar from "./common/navBar";
+import ServicesCategorie from "./components/servicesCategorie";
+import ServiceCategorieForm from "./components/serviceCategorieForm";
 import Products from "./components/products";
 import ProductForm from "./components/productForm";
 import ProductsType from "./components/productsType";
@@ -38,7 +40,16 @@ class App extends Component {
             <Route path="/register" component={RegisterForm} />
             <Route path="/login" component={LoginForm} />
             <Route path="/logout" component={Logout} />
-
+            <ProtectedRoute
+              path="/servicescategorie/:id"
+              component={ServiceCategorieForm}
+            />
+            <Route
+              path="/servicescategorie"
+              render={(props) => (
+                <ServicesCategorie {...props} user={this.state.user} />
+              )}
+            />
             <ProtectedRoute
               path="/productsCategorie/:id"
               component={ProductCategorieForm}

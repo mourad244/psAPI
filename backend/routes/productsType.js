@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const moment = require("moment");
 const express = require("express");
 const { ProductType, validate } = require("../models/productType");
 const { ProductCategorie } = require("../models/productCategorie");

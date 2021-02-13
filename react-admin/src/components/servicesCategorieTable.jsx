@@ -1,0 +1,45 @@
+import React, { Component } from "react";
+import Table from "../common/table";
+import { Link } from "react-router-dom";
+
+class ServicesCategorieTable extends Component {
+  columns = [
+    {
+      path: "name",
+      label: "name",
+      content: (productCategorie) => (
+        <Link to={`/servicesCategorie/${productCategorie._id}`}>
+          {productCategorie.name}
+        </Link>
+      ),
+    },
+    { path: "smallDesc", label: "Petite description" },
+    { path: "largeDesc", label: "Large description" },
+    { path: "assistance", label: "Assistance" },
+    { path: "images", label: "Images" },
+    {
+      key: "delete",
+      content: (productCategorie) => (
+        <button
+          onClick={() => this.props.onDelete(productCategorie)}
+          className="btn btn-danger btn-sm"
+        >
+          Supprimer
+        </button>
+      ),
+    },
+  ];
+  render() {
+    const { servicesCategorie, onSort, sortColumn } = this.props;
+    return (
+      <Table
+        columns={this.columns}
+        data={servicesCategorie}
+        sortColumn={sortColumn}
+        onSort={onSort}
+      ></Table>
+    );
+  }
+}
+
+export default ServicesCategorieTable;
