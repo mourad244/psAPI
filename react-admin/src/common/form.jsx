@@ -13,13 +13,13 @@ class Form extends Component {
     form: "",
     inputItem: "",
     sendFile: false,
-    selectedFile: null,
-    image: null,
+    // image: null, // when uploaded
+    // selectedimage: null,
   };
   validate = () => {
     const options = { abortEarly: false };
-    const { error } = Joi.validate(this.state.data, this.schema, options);
 
+    const { error } = Joi.validate(this.state.data, this.schema, options);
     if (!error) return null;
 
     const errors = {};
@@ -70,6 +70,7 @@ class Form extends Component {
     console.log(data);
     this.setState({ data });
   };
+
   addItem = (e, inputItem) => {
     e.preventDefault();
     const errors = { ...this.state.errors };
@@ -81,8 +82,19 @@ class Form extends Component {
     const data = { ...this.state.data };
 
     data[e.currentTarget.name].push(inputItem);
-    console.log(data);
     this.setState({ data, errors });
+  };
+
+  fileSelectedHandler = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      this.setState({
+        ["selected" + event.target.name]: event.target.files[0],
+      });
+      this.setState({
+        [event.target.name]: URL.createObjectURL(event.target.files[0]),
+      });
+      this.setState({ sendFile: true });
+    }
   };
 
   handleSubmit = (e) => {
@@ -93,11 +105,10 @@ class Form extends Component {
     if (sendFile) {
       return this.fileUploadHandler();
     }
-
     if (errors) return;
-
     this.doSubmit();
   };
+
   fileUploadHandler = () => {
     const fd = new FormData();
     const form = this.state.form;
@@ -106,40 +117,24 @@ class Form extends Component {
     delete data._id;
     for (const item in data) {
       if (Array.isArray(data[item])) {
-        // data[item].map((i, index) => console.log(item + `[${index}]`));
         data[item].map((i, index) => fd.append(item + `[${index}]`, i));
       } else {
         fd.append(item, data[item]);
       }
     }
-    fd.append("image", this.state.selectedFile, this.state.selectedFile.name);
+    for (const item in this.state) {
+      if (item.includes("selected")) {
+        let filename = item.replace("selected", "");
+        fd.append(filename, this.state[item], this.state[item].name);
+      }
+    }
 
     this.props.match.params.id && this.props.match.params.id != "new"
       ? axios.put(apiUrl + `/${form}/${this.props.match.params.id}`, fd)
       : axios.post(apiUrl + `/${form}`, fd);
-
     this.props.history.push(`/${form}`);
   };
 
-  fileSelectedHandler = (event) => {
-    if (event.target.files && event.target.files[0]) {
-      this.setState({ selectedFile: event.target.files[0] });
-      this.setState({ sendFile: true });
-      this.setState({ image: URL.createObjectURL(event.target.files[0]) });
-      // let img = event.target.files[0];
-      // let formData = new FormData();
-      // let data = { ...this.state.data };
-      // for (const item in data) {
-      //   formData.append(item, data[item]);
-      // }
-      // formData.append("image", img);
-      // // data.map((item) => {
-      // //
-      // // });
-      // console.log(formData);
-      // this.setState({ formData });
-    }
-  };
   renderImage(name, label) {
     const { data, errors } = this.state;
     const height = 200;
@@ -155,13 +150,14 @@ class Form extends Component {
     );
   }
   renderUpload(name, label, type = "file") {
-    const { image } = this.state;
+    // const { image } = this.state;
     const height = 200;
+
     return (
       <div>
         <UploadImage
           name={name}
-          image={image}
+          image={this.state[name]}
           height={height}
           type={type}
           label={label}

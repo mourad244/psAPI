@@ -13,6 +13,14 @@ const fs = require("fs");
 
 const router = express.Router();
 
+function pathFilteredFiles(files, fieldname) {
+  // console.log(files);
+  for (let item in files)
+    return _.filter(files[item], { fieldname: fieldname }).map(
+      (file) => file.path
+    );
+}
+
 router.get("/", async (req, res) => {
   const services = await Service.find()
     .populate("categorie", "name")
@@ -44,15 +52,14 @@ router.post("/", auth, async (req, res) => {
     }
 
     const { name, caracteristiques, desc1, desc2, categorie } = req.body;
-    console.log(_.filter(req.files, { fieldname: "image" }).path);
     const service = new Service({
       name: name,
       caracteristiques: caracteristiques,
       desc1: desc1,
       desc2: desc2,
 
-      images: req.files.path,
-      accessoires: accessoires,
+      images: pathFilteredFiles(req.files, "image"),
+      accessoires: pathFilteredFiles(req.files, "accessoire"),
       categorie: categorie,
     });
 
@@ -60,7 +67,7 @@ router.post("/", auth, async (req, res) => {
     res.send(service);
   } catch (err) {
     res.status(500).send({
-      message: `Could not upload the images: ${req.file.originalname}. ${err}`,
+      message: `Could not upload the images: ${req.files.originalname}. ${err}`,
     });
   }
 });
@@ -76,25 +83,47 @@ router.put("/:id", auth, async (req, res) => {
     return res.status(400).send("Invalid categorie service.");
 
   const service = await Service.findOne({ _id: req.params.id });
-  if (req.files) {
-    service.images.push(..._.map(req.files, "path"));
+  if (
+    pathFilteredFiles(req.files, "image") &&
+    pathFilteredFiles(req.files, "image").length != 0
+  ) {
+    console.log(pathFilteredFiles(req.files, "image")[0]);
+    service.images.push(pathFilteredFiles(req.files, "image")[0]);
+    // service.images.push(..._.map(req.files, "path"));
   }
-  const { name, caracteristiques, accessoires } = req.body;
+  if (
+    pathFilteredFiles(req.files, "accessoire") &&
+    pathFilteredFiles(req.files, "accessoire").length != 0
+  ) {
+    console.log("accessoire");
+    console.log(pathFilteredFiles(req.files, "accessoire")[0]);
+
+    service.accessoires.push(pathFilteredFiles(req.files, "accessoire")[0]);
+    // service.accessoires.push(..._.map(req.files, "path"));
+  }
+
+  const { name, desc1, desc2, caracteristiques } = req.body;
 
   service.name = name;
+  service.desc1 = desc1;
+  service.desc2 = desc2;
   service.categorie = serviceCategorie;
-
-  if (caracteristiques) service.caracteristiques.push(...caracteristiques);
-
-  if (accessoires) {
-    const accessoires = await Accessoire.find({
-      _id: { $in: req.body.accessoires },
-    });
-    if (!accessoires) return res.status(400).send("Invalid accessoires.");
-
-    service.accessoires.push(...accessoires);
+  if (caracteristiques) {
+    service.caracteristiques = caracteristiques;
   }
+
   await service.save();
+
+  if (!service)
+    return res.status(404).send("The service with the given ID was not found.");
+
+  res.send(service);
+});
+
+router.get("/:id", validateObjectId, async (req, res) => {
+  const service = await Service.findById(req.params.id)
+    // .populate("Categorie", "name")
+    .select("-__v");
 
   if (!service)
     return res.status(404).send("The service with the given ID was not found.");
@@ -104,23 +133,12 @@ router.put("/:id", auth, async (req, res) => {
 
 router.delete("/:id", auth, async (req, res) => {
   const service = await Service.findByIdAndRemove(req.params.id);
-  service.images.forEach((image) => fs.unlinkSync(image));
-  if (!service)
-    return res.status(404).send("The service with the given ID was not found.");
+  if (service.images) deleteImages(service.images);
+  if (services.accessoires) deleteImages(service.accessoires);
+  // if (!service)
+  //   return res.status(404).send("The service with the given ID was not found.");
 
-  res.send(service);
-});
-
-router.get("/:id", validateObjectId, async (req, res) => {
-  const service = await Service.findById(req.params.id)
-    .populate("Accessoire", "-__v")
-    .populate("Categorie", "name")
-    .select("-__v");
-
-  if (!service)
-    return res.status(404).send("The service with the given ID was not found.");
-
-  res.send(service);
+  // res.send(service);
 });
 
 module.exports = router;

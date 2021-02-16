@@ -24,6 +24,9 @@ const NavBar = ({ user }) => {
           <NavLink className="anv-item nav-link " to="/servicescategorie">
             Categorie de services
           </NavLink>
+          <NavLink className="anv-item nav-link " to="/services">
+            Services
+          </NavLink>
           <NavLink className="anv-item nav-link " to="/productscategorie">
             Categorie de produits
           </NavLink>

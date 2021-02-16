@@ -15,7 +15,6 @@ export function getProduct(productId) {
 }
 
 export async function saveProduct(product) {
-  console.log(product);
   if (product._id) {
     if (getProduct(product._id)) {
       const body = { ...product };

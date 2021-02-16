@@ -24,7 +24,6 @@ router.post("/", auth, async (req, res) => {
     if (req.files == undefined) {
       return res.status(400).send({ message: "Please upload a images!" });
     }
-
     const { error } = validate(req.body);
     if (error) {
       deleteImages(req.files);

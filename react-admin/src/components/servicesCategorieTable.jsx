@@ -7,9 +7,9 @@ class ServicesCategorieTable extends Component {
     {
       path: "name",
       label: "name",
-      content: (productCategorie) => (
-        <Link to={`/servicesCategorie/${productCategorie._id}`}>
-          {productCategorie.name}
+      content: (serviceCategorie) => (
+        <Link to={`/servicesCategorie/${serviceCategorie._id}`}>
+          {serviceCategorie.name}
         </Link>
       ),
     },
@@ -19,9 +19,9 @@ class ServicesCategorieTable extends Component {
     { path: "images", label: "Images" },
     {
       key: "delete",
-      content: (productCategorie) => (
+      content: (serviceCategorie) => (
         <button
-          onClick={() => this.props.onDelete(productCategorie)}
+          onClick={() => this.props.onDelete(serviceCategorie)}
           className="btn btn-danger btn-sm"
         >
           Supprimer

@@ -33,7 +33,14 @@ const uploadImages = multer({
   storage: storage,
   limits: maxsize,
   fileFilter: fileFilter,
-}).array("image" || "accessoire", 10);
+});
+// .fields([
+//   { name: "image", maxCount: 4 },
+//   { name: "accessoire", maxCount: 4 },
+// ]);
+// .array("image" || "accessoire", 10);
 
-const uploadImagesMiddleware = util.promisify(uploadImages);
+const uploadImagesMiddleware = util.promisify(
+  uploadImages.fields([{ name: "image" }, { name: "accessoire" }])
+);
 module.exports = uploadImagesMiddleware;
