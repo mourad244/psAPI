@@ -8,8 +8,7 @@ const serviceCategorieSchema = new mongoose.Schema({
   },
   smallDesc: {
     type: String,
-    minlength: 5,
-    required: true,
+    maxlength: 255,
   },
   largeDesc: {
     type: Array,
@@ -26,7 +25,7 @@ const ServiceCategorie = mongoose.model("CategorieSvc", serviceCategorieSchema);
 function validateServiceCategorie(categorieSvc) {
   const schema = Joi.object({
     name: Joi.string().min(3).max(50).required(),
-    smallDesc: Joi.string().min(3).max(255).required(),
+    smallDesc: Joi.string().max(255).allow(""),
     largeDesc: Joi.array().items(Joi.string().min(5)),
     images: Joi.array(),
     assistance: Joi.array().items(Joi.string().min(5)),

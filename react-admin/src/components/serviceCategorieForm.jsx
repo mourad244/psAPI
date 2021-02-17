@@ -23,7 +23,7 @@ class ServiceCategorieForm extends Form {
   schema = {
     _id: Joi.string(),
     name: Joi.string().required().label("Nom"),
-    smallDesc: Joi.string().label("Petite Description"),
+    smallDesc: Joi.string().label("Petite Description").allow(""),
     largeDesc: Joi /* .array() */.label("Large description"),
     assistance: Joi /* .array() */.label("Assistance"),
     images: Joi.array(),
@@ -73,7 +73,6 @@ class ServiceCategorieForm extends Form {
           {this.renderInput("name", "Nom")}
           {this.renderInput("smallDesc", "Petite Description")}
           {this.renderList("largeDesc", "Large Description")}
-          {console.log(this.state.data.assistance)}
           {this.renderList("assistance", "Assistance")}
           {this.state.data.images &&
             this.state.data.images.length != 0 &&
