@@ -4,6 +4,7 @@ import React from "react";
 const DisplayImage = ({ name, label, images, height = 200, ...rest }) => {
   return (
     <div>
+      <h2>{name}</h2>
       {images.length > 1 ? (
         images.map((img, index) => {
           return (
