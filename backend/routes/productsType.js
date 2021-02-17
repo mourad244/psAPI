@@ -49,7 +49,7 @@ router.post("/", auth, async (req, res) => {
       description: description,
       categorie: categorie,
       // images: req.files != undefined ? req.file.path : "",
-      images: images ? images.map((file) => file.path) : null,
+      images: images ? images.map((file) => file.path) : [],
     });
 
     await productType.save();
@@ -63,7 +63,6 @@ router.post("/", auth, async (req, res) => {
 
 router.put("/:id", auth, async (req, res) => {
   await uploadImages(req, res);
-
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -72,16 +71,18 @@ router.put("/:id", auth, async (req, res) => {
     return res.status(400).send("Invalid categorie product.");
 
   const productType = await ProductType.findOne({ _id: req.params.id });
-  if (req.files) {
-    // if (productType.image) fs.unlinkSync(productType.image);
-    // productType.image = req.file.path;
-    productType.images.push(..._.map(req.files, "path"));
+  let filtered = {};
+  for (let item in req.files) {
+    filtered[item] = req.files[item];
   }
 
   const { name, description, categorie } = req.body;
+  const { image: images } = filtered;
+
   if (name) productType.name = name;
   if (description) productType.description = description;
   if (categorie) productType.categorie = categorie;
+  if (images) productType.images.push(images.map((file) => file.path));
 
   await productType.save();
   if (!productType)

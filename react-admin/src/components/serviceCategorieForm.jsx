@@ -73,6 +73,7 @@ class ServiceCategorieForm extends Form {
           {this.renderInput("name", "Nom")}
           {this.renderInput("smallDesc", "Petite Description")}
           {this.renderList("largeDesc", "Large Description")}
+          {console.log(this.state.data.assistance)}
           {this.renderList("assistance", "Assistance")}
           {this.state.data.images &&
             this.state.data.images.length != 0 &&

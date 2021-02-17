@@ -69,12 +69,14 @@ router.put("/:id", auth, async (req, res) => {
     filtered[item] = req.files[item];
   }
 
-  const { name, smallDesc, largeDesc } = req.body;
+  const { name, smallDesc, largeDesc, assistance } = req.body;
+
   const { image: images } = filtered;
 
   if (name) serviceCategorie.name = name;
   if (smallDesc) serviceCategorie.smallDesc = smallDesc;
   if (largeDesc) serviceCategorie.largeDesc = largeDesc;
+  if (assistance) serviceCategorie.assistance = assistance;
   if (images) serviceCategorie.images.push(images.map((file) => file.path));
 
   await serviceCategorie.save();

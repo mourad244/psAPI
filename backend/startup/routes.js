@@ -1,6 +1,5 @@
 const express = require("express");
 const servicesCategorie = require("../routes/servicesCategorie");
-const accessoires = require("../routes/accessoires");
 const services = require("../routes/services");
 const productsCategorie = require("../routes/productsCategorie");
 const productsType = require("../routes/productsType");
@@ -22,7 +21,6 @@ module.exports = function (app) {
   app.use("/psapi/productstype", productsType);
   app.use("/psapi/productscategorie", productsCategorie);
   app.use("/psapi/servicescategorie", servicesCategorie);
-  app.use("/psapi/accessoires", accessoires);
   app.use("/psapi/services", services);
   app.use("/psapi/clients", clients);
   app.use("/psapi/users", users);

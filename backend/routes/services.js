@@ -70,7 +70,6 @@ router.post("/", auth, async (req, res) => {
 router.put("/:id", auth, async (req, res) => {
   await uploadImages(req, res);
   const { error } = validate(req.body);
-  console.log(error);
   if (error) return res.status(400).send(error.details[0].message);
 
   const serviceCategorie = await ServiceCategorie.findById(req.body.categorie);

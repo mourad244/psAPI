@@ -155,8 +155,7 @@ router.put("/avis/:id", async (req, res) => {
 });
 
 router.get("/avis/:id", async (req, res) => {
-  const product = await Product.findById(req.params.id);
-  const avis = await Avi.find({ _id: { $in: product.avis } })
+  const avis = await Avi.find({ product: req.params.id })
     .populate("product", "name -_id")
     .populate("client", "email")
     .select("-__v")
