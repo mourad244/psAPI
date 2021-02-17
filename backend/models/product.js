@@ -37,7 +37,7 @@ function validateProduct(product) {
     type: Joi.objectId().required(),
     images: Joi.array(),
     avis: Joi.array().items(Joi.objectId()),
-    description: Joi.array().items(Joi.string().min(5)),
+    description: Joi.array(),
   });
 
   return schema.validate(product);

@@ -27,8 +27,8 @@ const ProductType = mongoose.model("ProductType", productTypeSchema);
 function validateProductType(productType) {
   const schema = Joi.object({
     name: Joi.string().min(3).max(50).required(),
-    images: Joi.array(),
-    description: Joi.string().max(255),
+    images: Joi.array().allow(null),
+    description: Joi.string().max(255).allow(""),
     categorie: Joi.objectId().required(),
   });
 

@@ -37,7 +37,7 @@ router.post("/", auth, async (req, res) => {
       name: name,
       description: description,
       // images: req.files != undefined ? req.files.path : "",
-      images: images ? images.map((file) => file.path) : null,
+      images: images ? images.map((file) => file.path) : [],
     });
 
     await productCategorie.save();
@@ -51,7 +51,6 @@ router.post("/", auth, async (req, res) => {
 
 router.put("/:id", auth, async (req, res) => {
   await uploadImages(req, res);
-
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 

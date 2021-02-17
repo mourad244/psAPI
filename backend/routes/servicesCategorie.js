@@ -42,7 +42,7 @@ router.post("/", auth, async (req, res) => {
       largeDesc: largeDesc,
       assistance: assistance,
       // images: req.files != undefined ? req.files.path : "",
-      images: images ? images.map((file) => file.path) : null,
+      images: images ? images.map((file) => file.path) : [],
     });
     await serviceCategorie.save();
 

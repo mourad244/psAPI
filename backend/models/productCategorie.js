@@ -23,8 +23,8 @@ const ProductCategorie = mongoose.model(
 function validateCategorieProduit(productCategorie) {
   const schema = Joi.object({
     name: Joi.string().min(3).max(50).required(),
-    images: Joi.array(),
-    description: Joi.string().min(3).max(255),
+    images: Joi.array().allow(null),
+    description: Joi.string().max(255).allow(""),
   });
   return schema.validate(productCategorie);
 }

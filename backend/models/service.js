@@ -24,6 +24,7 @@ const Service = mongoose.model(
     },
     images: {
       type: Array,
+      default: [],
     },
     accessoires: {
       type: Array,

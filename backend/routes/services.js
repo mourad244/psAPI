@@ -53,8 +53,8 @@ router.post("/", auth, async (req, res) => {
       desc1: desc1,
       desc2: desc2,
 
-      images: images ? images.map((file) => file.path) : null,
-      accessoires: accessoires ? accessoires.map((file) => file.path) : null,
+      images: images ? images.map((file) => file.path) : [],
+      accessoires: accessoires ? accessoires.map((file) => file.path) : [],
       categorie: categorie,
     });
 
@@ -69,8 +69,8 @@ router.post("/", auth, async (req, res) => {
 
 router.put("/:id", auth, async (req, res) => {
   await uploadImages(req, res);
-
   const { error } = validate(req.body);
+  console.log(error);
   if (error) return res.status(400).send(error.details[0].message);
 
   const serviceCategorie = await ServiceCategorie.findById(req.body.categorie);

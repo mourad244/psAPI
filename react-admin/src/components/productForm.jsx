@@ -24,7 +24,7 @@ class ProductForm extends Form {
     _id: Joi.string(),
     name: Joi.string().required().label("Nom"),
     avis: Joi.array().label("avis"),
-    images: Joi.array(),
+    images: Joi./* array() */ label("images").optional(),
     description: Joi /* .array() */.label("description"),
     type: Joi.string().required().label("type de produit"),
   };

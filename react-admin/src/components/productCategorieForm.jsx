@@ -21,8 +21,9 @@ class ProductCategorieForm extends Form {
   schema = {
     _id: Joi.string(),
     name: Joi.string().required().label("Nom"),
-    images: Joi.array(),
-    description: Joi.string().label("description"),
+    images: Joi /* .array() */.label("images")
+      .optional(),
+    description: Joi.string().label("description").allow(""),
   };
 
   async populateProducts() {

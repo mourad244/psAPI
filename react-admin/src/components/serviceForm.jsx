@@ -28,10 +28,8 @@ class ServiceForm extends Form {
     desc1: Joi.string().label("Desc1").allow(""),
     desc2: Joi.string().label("Desc2").allow(""),
     caracteristiques: Joi /* .array() */.label("Caracteristiques"),
-    images: Joi /* .array() */.label("images")
-      .optional(),
-    accessoires: Joi /* .array() */.label("accessoires")
-      .optional(),
+    images: Joi /* .array() */.label("images"),
+    accessoires: Joi /* .array() */.label("accessoires"),
     categorie: Joi.string().required().label("Categorie de service"),
   };
 
@@ -87,6 +85,7 @@ class ServiceForm extends Form {
           {this.renderInput("desc1", "Desc1")}
           {this.renderInput("desc2", "Desc2")}
           {this.renderList("caracteristiques", "Caractéristiques")}
+
           {this.state.data.images.length != 0 &&
             this.renderImage("images", "Image")}
           {this.renderUpload("image", "upload image")}

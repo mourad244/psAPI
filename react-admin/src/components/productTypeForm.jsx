@@ -24,8 +24,8 @@ class ProductTypeForm extends Form {
   schema = {
     _id: Joi.string(),
     name: Joi.string().required().label("Nom"),
-    images: Joi.array(),
-    description: Joi.string().label("description"),
+    images: Joi.label("images"),
+    description: Joi.string().label("description").allow(""),
     categorie: Joi.string().required().label("categorie de produit"),
   };
 
@@ -75,9 +75,11 @@ class ProductTypeForm extends Form {
         <h1>Formulaire Product Type</h1>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput("name", "Nom")}
-          {this.state.data.images &&
+          {
+            /* this.state.data.images && */
             this.state.data.images.length != 0 &&
-            this.renderImage("images", "Image")}
+              this.renderImage("images", "Image")
+          }
           {this.renderUpload("image", "upload image")}
           {this.renderInput("description", "Description")}
           {this.renderSelect("categorie", "Categorie de produit", categories)}

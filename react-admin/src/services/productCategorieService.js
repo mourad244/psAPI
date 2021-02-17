@@ -19,7 +19,6 @@ export async function saveProductCategorie(productCategorie) {
     if (getProductCategorie(productCategorie._id)) {
       const body = { ...productCategorie };
       delete body._id;
-
       return http.put(productCategorieUrl(productCategorie._id), body);
     } else return http.post(apiEndpoint, productCategorie);
   }

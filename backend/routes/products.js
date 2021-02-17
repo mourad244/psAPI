@@ -63,7 +63,7 @@ router.post("/", auth, async (req, res) => {
       name: name,
       description: description,
       type: type,
-      images: images ? images.map((file) => file.path) : null,
+      images: images ? images.map((file) => file.path) : [],
     });
 
     await product.save();
