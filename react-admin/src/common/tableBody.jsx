@@ -6,7 +6,6 @@ class TableBody extends Component {
   renderCell = (item, column) => {
     if (column.date) return column.date(item);
     if (column.content) return column.content(item);
-    console.log(item);
     if (
       column.path == "images" &&
       Array.isArray(item[column.path]) &&

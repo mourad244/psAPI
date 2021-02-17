@@ -14,11 +14,9 @@ const Service = mongoose.model(
     },
     desc1: {
       type: String,
-      minlength: 3,
     },
     desc2: {
       type: String,
-      minlength: 3,
     },
     caracteristiques: {
       type: Array,
@@ -43,8 +41,8 @@ function validateService(service) {
   const schema = Joi.object({
     name: Joi.string().min(3).max(50).required(),
     categorie: Joi.objectId().required(),
-    desc1: Joi.string().min(3),
-    desc2: Joi.string().min(3),
+    desc1: Joi.string().allow(""),
+    desc2: Joi.string().allow(""),
     caracteristiques: Joi.array(),
     images: Joi.array(),
     accessoires: Joi.array(),

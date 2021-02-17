@@ -82,7 +82,20 @@ class ServicesCategorie extends Component {
     const { user } = this.props;
 
     if (count === 0)
-      return <p>aucune categorie de service dans la base de donnée</p>;
+      return (
+        <div>
+          {user && (
+            <Link
+              to={"/servicesCategorie/new"}
+              className="btn btn-primary"
+              style={{ marginBottom: 20 }}
+            >
+              Nouveau Categorie de Service
+            </Link>
+          )}
+          <p>aucune categorie de service dans la base de donnée</p>
+        </div>
+      );
 
     const { totalCount, data: servicesCategorie } = this.getPagedData();
     return (

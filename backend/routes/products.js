@@ -39,9 +39,6 @@ router.get("/", async (req, res) => {
 router.post("/", auth, async (req, res) => {
   try {
     await uploadImages(req, res);
-    if (req.files == undefined) {
-      return res.status(400).send({ message: "Please upload an image!" });
-    }
 
     const { error } = validate(req.body);
     if (error) {
@@ -54,13 +51,19 @@ router.post("/", auth, async (req, res) => {
       deleteImages(req.files);
       return res.status(400).send("Invalid type of product.");
     }
+    let filtered = {};
+    for (let item in req.files) {
+      filtered[item] = req.files[item];
+    }
 
     const { name, description, type } = req.body;
+    const { image: images } = filtered;
+
     const product = new Product({
       name: name,
       description: description,
       type: type,
-      images: req.files.map((file) => file.path),
+      images: images ? images.map((file) => file.path) : null,
     });
 
     await product.save();
@@ -74,7 +77,6 @@ router.post("/", auth, async (req, res) => {
 
 router.put("/:id", auth, async (req, res) => {
   await uploadImages(req, res);
-  console.log(_.filter(req.files, { fieldname: "image" }).path);
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -82,21 +84,19 @@ router.put("/:id", auth, async (req, res) => {
   if (!productType) return res.status(400).send("Invalide type of product");
 
   const product = await Product.findOne({ _id: req.params.id });
-  if (req.files) {
-    // console.log(req.files);
-    // if (product.images)
-    //   try {
-    //     // fs.unlinkSync(product.images);
-    //     deleteImages(req.files);
-    //   } catch (error) {
-    //     console.log("delete path from db for an inexsiting files");
-    //   }
-    product.images.push(..._.map(req.files, "path"));
+
+  let filtered = {};
+  for (let item in req.files) {
+    filtered[item] = req.files[item];
   }
+
   const { name, type, description } = req.body;
+  const { image: images } = filtered;
+
   if (name) product.name = name;
   if (type) product.type = type;
   if (description) product.description = description;
+  if (images) product.images.push(images.map((file) => file.path));
   await product.save();
 
   if (!product)

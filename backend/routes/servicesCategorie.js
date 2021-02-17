@@ -21,23 +21,28 @@ router.get("/", async (req, res) => {
 router.post("/", auth, async (req, res) => {
   try {
     await uploadImages(req, res);
-    if (req.files == undefined) {
-      return res.status(400).send({ message: "Please upload a images!" });
-    }
+
     const { error } = validate(req.body);
     if (error) {
       deleteImages(req.files);
       return res.status(400).send(error.details[0].message);
     }
 
+    let filtered = {};
+    for (let item in req.files) {
+      filtered[item] = req.files[item];
+    }
+
     const { name, smallDesc, largeDesc, assistance } = req.body;
+    const { image: images } = filtered;
+
     const serviceCategorie = new ServiceCategorie({
       name: name,
       smallDesc: smallDesc,
       largeDesc: largeDesc,
       assistance: assistance,
       // images: req.files != undefined ? req.files.path : "",
-      images: req.files.path,
+      images: images ? images.map((file) => file.path) : null,
     });
     await serviceCategorie.save();
 
@@ -59,13 +64,18 @@ router.put("/:id", auth, async (req, res) => {
     _id: req.params.id,
   });
 
-  if (req.files) {
-    serviceCategorie.images.push(..._.map(req.files, "path"));
+  let filtered = {};
+  for (let item in req.files) {
+    filtered[item] = req.files[item];
   }
+
   const { name, smallDesc, largeDesc } = req.body;
+  const { image: images } = filtered;
+
   if (name) serviceCategorie.name = name;
   if (smallDesc) serviceCategorie.smallDesc = smallDesc;
   if (largeDesc) serviceCategorie.largeDesc = largeDesc;
+  if (images) serviceCategorie.images.push(images.map((file) => file.path));
 
   await serviceCategorie.save();
 

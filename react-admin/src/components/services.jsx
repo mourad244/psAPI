@@ -84,7 +84,6 @@ class Services extends Component {
       searchQuery,
       services: allServices,
     } = this.state;
-
     let filtered = allServices;
     if (searchQuery)
       filtered = allServices.filter((m) =>
@@ -92,7 +91,7 @@ class Services extends Component {
       );
     else if (selectedCategorie && selectedCategorie._id) {
       filtered = allServices.filter(
-        (m) => m.type._id === selectedCategorie._id
+        (m) => m.categorie._id === selectedCategorie._id
       );
     }
     const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
@@ -105,7 +104,7 @@ class Services extends Component {
     const { length: count } = this.state.services;
     const { pageSize, currentPage, sortColumn, searchQuery } = this.state;
     const { user } = this.props;
-    <div>hello world</div>;
+
     if (count === 0)
       return (
         <div>

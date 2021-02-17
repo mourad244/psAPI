@@ -104,7 +104,21 @@ class Products extends Component {
     const { pageSize, currentPage, sortColumn, searchQuery } = this.state;
     const { user } = this.props;
 
-    if (count === 0) return <p>aucun product dans la base de donnée</p>;
+    if (count === 0)
+      return (
+        <div>
+          {user && (
+            <Link
+              to={"/products/new"}
+              className="btn btn-primary"
+              style={{ marginBottom: 20 }}
+            >
+              Nouveau produits
+            </Link>
+          )}
+          <p>aucun product dans la base de donnée</p>
+        </div>
+      );
 
     const { totalCount, data: products } = this.getPagedData();
     return (

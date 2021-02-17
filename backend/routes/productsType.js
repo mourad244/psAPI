@@ -22,9 +22,7 @@ router.get("/", async (req, res) => {
 router.post("/", auth, async (req, res) => {
   try {
     await uploadImages(req, res);
-    if (req.files == undefined) {
-      return res.status(400).send({ message: "Please upload an images!" });
-    }
+
     const { error } = validate(req.body);
     if (error) {
       deleteImages(req.files);
@@ -39,13 +37,19 @@ router.post("/", auth, async (req, res) => {
       return res.status(400).send("Invalid categorie product.");
     }
 
+    let filtered = {};
+    for (let item in req.files) {
+      filtered[item] = req.files[item];
+    }
+
     const { name, description, categorie } = req.body;
+    const { image: images } = filtered;
     const productType = new ProductType({
       name: name,
       description: description,
       categorie: categorie,
       // images: req.files != undefined ? req.file.path : "",
-      images: req.files.path,
+      images: images ? images.map((file) => file.path) : null,
     });
 
     await productType.save();

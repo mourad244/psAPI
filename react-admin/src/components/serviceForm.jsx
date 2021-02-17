@@ -25,8 +25,8 @@ class ServiceForm extends Form {
   schema = {
     _id: Joi.string(),
     name: Joi.string().required().label("Nom"),
-    desc1: Joi.string().required().label("Desc1"),
-    desc2: Joi.string().required().label("Desc2"),
+    desc1: Joi.string().label("Desc1").allow(""),
+    desc2: Joi.string().label("Desc2").allow(""),
     caracteristiques: Joi /* .array() */.label("Caracteristiques"),
     images: Joi /* .array() */.label("images")
       .optional(),

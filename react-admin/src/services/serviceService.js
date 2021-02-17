@@ -15,7 +15,6 @@ export function getService(serviceId) {
 }
 
 export async function saveService(service) {
-  console.log(service);
   if (service._id) {
     if (getService(service._id)) {
       const body = { ...service };
