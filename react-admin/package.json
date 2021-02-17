@@ -9,11 +9,9 @@
     "joi-browser": "^13.4.0",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.20",
-    "moment-timezone": "^0.5.32",
     "prop-types": "^15.6.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-moment": "^1.1.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "^4.0.1",
     "react-toastify": "^4.2.3"
