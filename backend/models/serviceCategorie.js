@@ -26,9 +26,9 @@ function validateServiceCategorie(categorieSvc) {
   const schema = Joi.object({
     name: Joi.string().min(3).max(50).required(),
     smallDesc: Joi.string().max(255).allow(""),
-    largeDesc: Joi.array().items(Joi.string().min(5)),
+    largeDesc: Joi.array().items(Joi.string()),
     images: Joi.array(),
-    assistance: Joi.array().items(Joi.string().min(5)),
+    assistance: Joi.array().items(Joi.string()),
   });
   return schema.validate(categorieSvc);
 }

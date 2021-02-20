@@ -1,4 +1,5 @@
 import React from "react";
+import { FaPlus } from "react-icons/fa";
 import Joi from "joi-browser";
 import Form from "../common/form";
 import {
@@ -29,10 +30,10 @@ class ServiceCategorieForm extends Form {
     images: Joi.array(),
   };
 
-  async populateServices() {
+  async populateServicesCategorie() {
     try {
       const serviceCategorieId = this.props.match.params.id;
-      if (serviceCategorieId === "new") return;
+      if (serviceCategorieId === "") return;
 
       const { data: serviceCategorie } = await getServiceCategorie(
         serviceCategorieId
@@ -46,7 +47,7 @@ class ServiceCategorieForm extends Form {
   }
 
   async componentDidMount() {
-    await this.populateServices();
+    await this.populateServicesCategorie();
   }
 
   mapToViewModel(serviceCategorie) {
@@ -62,24 +63,46 @@ class ServiceCategorieForm extends Form {
   doSubmit = async () => {
     // call the server
     await saveServiceCategorie(this.state.data);
-    this.props.history.push("/servicesCategorie");
+    if (this.props.match) this.props.history.push("/servicesCategorie");
+    else {
+      window.location.reload();
+    }
   };
 
   render() {
+    let serviceCategorieId;
+    try {
+      serviceCategorieId = this.props.match.params.id;
+    } catch {}
     return (
-      <div>
-        <h1>Formulaire categorie de service </h1>
-        <form onSubmit={this.handleSubmit}>
-          {this.renderInput("name", "Nom")}
-          {this.renderInput("smallDesc", "Petite Description")}
-          {this.renderList("largeDesc", "Large Description")}
-          {this.renderList("assistance", "Assistance")}
-          {this.state.data.images &&
-            this.state.data.images.length != 0 &&
-            this.renderImage("images", "Image")}
-          {this.renderUpload("image", "upload image")}
-          {this.renderButton("Sauvegarder")}
-        </form>
+      <div
+        className={
+          "card textcenter mt-3 " +
+          (this.props.formDisplay || serviceCategorieId ? "" : "add-item")
+        }
+      >
+        <div
+          className="apt-addheading card-header bg-primary text-white"
+          onClick={this.props.toggleForm}
+        >
+          <FaPlus /> Ajouter categorie de service
+        </div>
+        <div className="card-body">
+          <form id="aptForm" noValidate onSubmit={this.handleSubmit}>
+            {this.renderInput("name", "Nom")}
+            {this.renderInput("smallDesc", "Petite Description")}
+            {this.renderList("largeDesc", "Large Description")}
+            {this.renderInputList("largeDesc", "Large Description")}
+            {this.renderList("assistance", "Assistance")}
+            {this.renderInputList("assistance", "Assistance")}
+
+            {this.state.data.images &&
+              this.state.data.images.length != 0 &&
+              this.renderImage("images", "Images")}
+            {this.renderUpload("image", "upload image")}
+            {this.renderButton("Ajouter")}
+          </form>
+        </div>
       </div>
     );
   }

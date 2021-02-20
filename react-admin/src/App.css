@@ -1,3 +1,10 @@
+.add-item .card-body {
+  display: none;
+}
+.apt-addheading {
+  cursor: pointer;
+  user-select: none;
+}
 .app {
   text-align: center;
 }

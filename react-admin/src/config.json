@@ -1,3 +1,4 @@
 {
-  "apiUrl": "http://localhost:3900/psapi"
+  "apiUrl": "http://localhost:3900/psapi",
+  "imageUrl": "http://localhost:3900"
 }

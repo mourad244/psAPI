@@ -1,24 +1,25 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
-import ProductsTypeTable from "./productsTypeTable";
-import ListGroup from "../common/listGroup";
-import Pagination from "../common/pagination";
 import {
   getProductsType,
   deleteProductType,
 } from "../services/productTypeService";
+import ProductsTypeTable from "./productsTypeTable";
 import { getProductsCategorie } from "../services/productCategorieService";
-import { paginate } from "../utils/paginate";
+import ProductTypeForm from "./productTypeForm";
+import ListGroup from "../common/listGroup";
+import Pagination from "../common/pagination";
 import SearchBox from "../common/searchBox";
+import { paginate } from "../utils/paginate";
+import { toast } from "react-toastify";
 import _ from "lodash";
 
 class ProductsType extends Component {
   state = {
+    formDisplay: false,
     productsType: [],
     categories: [],
     currentPage: 1,
-    pageSize: 5,
+    pageSize: 10,
     searchQuery: "",
     selectedCategorie: null,
     sortColumn: { path: "name", order: "asc" },
@@ -28,10 +29,7 @@ class ProductsType extends Component {
     const categories = [{ _id: "", name: "Tous les categories" }, ...data];
 
     const { data: productsType } = await getProductsType();
-    // productsType.forEach((productType) => {
-    //   delete productType.avis;
-    // });
-    // console.log(productsType);
+
     this.setState({ productsType, categories });
   }
 
@@ -73,6 +71,12 @@ class ProductsType extends Component {
     this.setState({ sortColumn });
   };
 
+  toggleForm = () => {
+    this.setState({
+      formDisplay: !this.state.formDisplay,
+    });
+  };
+
   getPagedData = () => {
     const {
       pageSize,
@@ -107,16 +111,13 @@ class ProductsType extends Component {
     if (count === 0)
       return (
         <div>
+          <h2>aucun type de produit dans la base de donnée</h2>
           {user && (
-            <Link
-              to={"/productsType/new"}
-              className="btn btn-primary"
-              style={{ marginBottom: 20 }}
-            >
-              Nouveau Produit
-            </Link>
+            <ProductTypeForm
+              formDisplay={this.state.formDisplay}
+              toggleForm={this.toggleForm}
+            />
           )}
-          <p>aucun type de produit dans la base de donnée</p>
         </div>
       );
 
@@ -131,17 +132,13 @@ class ProductsType extends Component {
           ></ListGroup>
         </div>
         <div className="col">
+          <h3>il ya {totalCount} types de produit dans la base de données</h3>
           {user && (
-            <Link
-              to={"/productsType/new"}
-              className="btn btn-primary"
-              style={{ marginBottom: 20 }}
-            >
-              Nouveau Type de Produit
-            </Link>
+            <ProductTypeForm
+              formDisplay={this.state.formDisplay}
+              toggleForm={this.toggleForm}
+            />
           )}
-
-          <p>il ya {totalCount} type de produits dans la base de données</p>
           <SearchBox
             value={searchQuery}
             onChange={this.handleSearch}

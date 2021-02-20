@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import ServicesCategorieTable from "./servicesCategorieTable";
 import Pagination from "../common/pagination";
@@ -10,12 +9,14 @@ import {
 import { paginate } from "../utils/paginate";
 import SearchBox from "../common/searchBox";
 import _ from "lodash";
+import ServiceCategorieForm from "./serviceCategorieForm";
 
 class ServicesCategorie extends Component {
   state = {
+    formDisplay: false,
     servicesCategorie: [],
     currentPage: 1,
-    pageSize: 5,
+    pageSize: 10,
     searchQuery: "",
     sortColumn: { path: "name", order: "asc" },
   };
@@ -54,6 +55,11 @@ class ServicesCategorie extends Component {
   handleSort = (sortColumn) => {
     this.setState({ sortColumn });
   };
+  toggleForm = () => {
+    this.setState({
+      formDisplay: !this.state.formDisplay,
+    });
+  };
 
   getPagedData = () => {
     const {
@@ -84,16 +90,13 @@ class ServicesCategorie extends Component {
     if (count === 0)
       return (
         <div>
+          <h2>aucune categorie de service dans la base de donnée</h2>
           {user && (
-            <Link
-              to={"/servicesCategorie/new"}
-              className="btn btn-primary"
-              style={{ marginBottom: 20 }}
-            >
-              Nouveau Categorie de Service
-            </Link>
+            <ServiceCategorieForm
+              formDisplay={this.state.formDisplay}
+              toggleForm={this.toggleForm}
+            />
           )}
-          <p>aucune categorie de service dans la base de donnée</p>
         </div>
       );
 
@@ -104,19 +107,15 @@ class ServicesCategorie extends Component {
         
         </div> */}
         <div className="col">
+          <h3>
+            il ya {totalCount} categories de service dans la base de données
+          </h3>
           {user && (
-            <Link
-              to={"/servicesCategorie/new"}
-              className="btn btn-primary"
-              style={{ marginBottom: 20 }}
-            >
-              Nouvelle Categorie de Service
-            </Link>
+            <ServiceCategorieForm
+              formDisplay={this.state.formDisplay}
+              toggleForm={this.toggleForm}
+            />
           )}
-
-          <p>
-            il ya {totalCount} categorie de services dans la base de données
-          </p>
           <SearchBox
             value={searchQuery}
             onChange={this.handleSearch}

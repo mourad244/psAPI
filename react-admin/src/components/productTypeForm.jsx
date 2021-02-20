@@ -1,4 +1,5 @@
 import React from "react";
+import { FaPlus } from "react-icons/fa";
 import Joi from "joi-browser";
 import Form from "../common/form";
 import { getProductsCategorie } from "../services/productCategorieService";
@@ -37,7 +38,7 @@ class ProductTypeForm extends Form {
   async populateProductsType() {
     try {
       const productTypeId = this.props.match.params.id;
-      if (productTypeId === "new") return;
+      if (productTypeId === "") return;
 
       const { data: productType } = await getProductType(productTypeId);
       this.setState({ data: this.mapToViewModel(productType) });
@@ -65,26 +66,42 @@ class ProductTypeForm extends Form {
   doSubmit = async () => {
     // call the server
     await saveProductType(this.state.data);
-    this.props.history.push("/productsType");
+    if (this.props.match) this.props.history.push("/productsType");
+    else {
+      window.location.reload();
+    }
   };
 
   render() {
     const { categories } = this.state;
+    let productTypeId;
+    try {
+      productTypeId = this.props.match.params.id;
+    } catch {}
     return (
-      <div>
-        <h1>Formulaire Product Type</h1>
-        <form onSubmit={this.handleSubmit}>
-          {this.renderInput("name", "Nom")}
-          {
-            /* this.state.data.images && */
-            this.state.data.images.length != 0 &&
-              this.renderImage("images", "Image")
-          }
-          {this.renderUpload("image", "upload image")}
-          {this.renderInput("description", "Description")}
-          {this.renderSelect("categorie", "Categorie de produit", categories)}
-          {this.renderButton("Sauvegarder")}
-        </form>
+      <div
+        className={
+          "card textcenter mt-3 " +
+          (this.props.formDisplay || productTypeId ? "" : "add-item")
+        }
+      >
+        <div
+          className="apt-addheading card-header bg-primary text-white"
+          onClick={this.props.toggleForm}
+        >
+          <FaPlus /> Ajouter type de produit
+        </div>
+        <div className="card-body">
+          <form id="aptForm" noValidate onSubmit={this.handleSubmit}>
+            {this.renderInput("name", "Nom")}
+            {this.state.data.images.length != 0 &&
+              this.renderImage("images", "Image")}
+            {this.renderUpload("image", "upload image")}
+            {this.renderInput("description", "Description")}
+            {this.renderSelect("categorie", "Categorie de produit", categories)}
+            {this.renderButton("Sauvegarder")}
+          </form>
+        </div>
       </div>
     );
   }

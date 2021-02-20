@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
 import ProductsCategorieTable from "./productsCategorieTable";
+import ProductCategorieForm from "./productCategorieForm";
 import Pagination from "../common/pagination";
 import {
   getProductsCategorie,
@@ -9,22 +8,21 @@ import {
 } from "../services/productCategorieService";
 import { paginate } from "../utils/paginate";
 import SearchBox from "../common/searchBox";
+import { toast } from "react-toastify";
 import _ from "lodash";
 
 class ProductsCategorie extends Component {
   state = {
+    formDisplay: false,
     productsCategorie: [],
     currentPage: 1,
-    pageSize: 5,
+    pageSize: 10,
     searchQuery: "",
     sortColumn: { path: "name", order: "asc" },
   };
   async componentDidMount() {
     const { data: productsCategorie } = await getProductsCategorie();
-    // productsCategorie.forEach((productCategorie) => {
-    //   delete productCategorie.avis;
-    // });
-    // console.log(productsCategorie);
+
     this.setState({ productsCategorie });
   }
 
@@ -58,6 +56,12 @@ class ProductsCategorie extends Component {
     this.setState({ sortColumn });
   };
 
+  toggleForm = () => {
+    this.setState({
+      formDisplay: !this.state.formDisplay,
+    });
+  };
+
   getPagedData = () => {
     const {
       pageSize,
@@ -87,16 +91,14 @@ class ProductsCategorie extends Component {
     if (count === 0)
       return (
         <div>
+          <h2>aucune categorie de produit dans la base de donnée</h2>
+
           {user && (
-            <Link
-              to={"/productsCategorie/new"}
-              className="btn btn-primary"
-              style={{ marginBottom: 20 }}
-            >
-              Nouveau categorie de produit
-            </Link>
+            <ProductCategorieForm
+              formDisplay={this.state.formDisplay}
+              toggleForm={this.toggleForm}
+            />
           )}
-          <p>aucun categorie de produit dans la base de donnée</p>
         </div>
       );
 
@@ -107,19 +109,15 @@ class ProductsCategorie extends Component {
         
         </div> */}
         <div className="col">
-          {user && (
-            <Link
-              to={"/productsCategorie/new"}
-              className="btn btn-primary"
-              style={{ marginBottom: 20 }}
-            >
-              Nouvelle Categorie de Produit
-            </Link>
-          )}
-
-          <p>
+          <h3>
             il ya {totalCount} categorie de produits dans la base de données
-          </p>
+          </h3>
+          {user && (
+            <ProductCategorieForm
+              formDisplay={this.state.formDisplay}
+              toggleForm={this.toggleForm}
+            />
+          )}
           <SearchBox
             value={searchQuery}
             onChange={this.handleSearch}

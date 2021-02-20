@@ -1,10 +1,10 @@
 import React from "react";
+import { FaPlus } from "react-icons/fa";
 import Joi from "joi-browser";
 import Form from "../common/form";
 import { getServicesCategorie } from "../services/serviceCategorieService";
 import { getService, saveService } from "../services/serviceService";
 import _ from "lodash";
-import Input from "../common/input";
 
 class ServiceForm extends Form {
   state = {
@@ -35,14 +35,13 @@ class ServiceForm extends Form {
 
   async populateCategories() {
     const { data: categories } = await getServicesCategorie();
-
     this.setState({ categories });
   }
 
   async populateServices() {
     try {
       const serviceId = this.props.match.params.id;
-      if (serviceId === "new") return;
+      if (serviceId === "") return;
 
       const { data: service } = await getService(serviceId);
       this.setState({ data: this.mapToViewModel(service) });
@@ -73,32 +72,51 @@ class ServiceForm extends Form {
   doSubmit = async () => {
     // call the server
     await saveService(this.state.data);
-    this.props.history.push("/services");
+    if (this.props.match) this.props.history.push("/services");
+    else {
+      window.location.reload();
+    }
   };
 
   render() {
+    let serviceId;
+    try {
+      serviceId = this.props.match.params.id;
+    } catch {}
     return (
-      <div>
-        <h1>Formulaire Service</h1>
-        <form onSubmit={this.handleSubmit}>
-          {this.renderInput("name", "Nom")}
-          {this.renderInput("desc1", "Desc1")}
-          {this.renderInput("desc2", "Desc2")}
-          {this.renderList("caracteristiques", "Caractéristiques")}
-
-          {this.state.data.images.length != 0 &&
-            this.renderImage("images", "Image")}
-          {this.renderUpload("image", "upload image")}
-          {this.state.data.accessoires.length != 0 &&
-            this.renderImage("accessoires", "Accessoire")}
-          {this.renderUpload("accessoire", "upload accessoire")}
-          {this.renderSelect(
-            "categorie",
-            "Categorie de produit",
-            this.state.categories
-          )}
-          {this.renderButton("Sauvegarder")}
-        </form>
+      <div
+        className={
+          "card textcenter mt-3 " +
+          (this.props.formDisplay || serviceId ? "" : "add-item")
+        }
+      >
+        <div
+          className="apt-addheading card-header bg-primary text-white"
+          onClick={this.props.toggleForm}
+        >
+          <FaPlus /> Ajouter service
+        </div>
+        <div className="card-body">
+          <form id="aptForm" noValidate onSubmit={this.handleSubmit}>
+            {this.renderInput("name", "Nom")}
+            {this.renderInput("desc1", "Desc1")}
+            {this.renderInput("desc2", "Desc2")}
+            {this.renderList("caracteristiques", "Caractéristiques")}
+            {this.renderInputList("caracteristiques", "Caractéristiques")}
+            {this.state.data.images.length != 0 &&
+              this.renderImage("images", "Image")}
+            {this.renderUpload("image", "upload image")}
+            {this.state.data.accessoires.length != 0 &&
+              this.renderImage("accessoires", "Accessoire")}
+            {this.renderUpload("accessoire", "upload accessoire")}
+            {this.renderSelect(
+              "categorie",
+              "Categorie de produit",
+              this.state.categories
+            )}
+            {this.renderButton("Sauvegarder")}
+          </form>
+        </div>
       </div>
     );
   }

@@ -3,15 +3,14 @@ import React, { Component } from "react";
 import { getProducts, deleteProduct } from "../services/productService";
 import { getProductsType } from "../services/productTypeService";
 
+import ProductsTable from "./productsTable";
+import ProductForm from "./productForm";
 import Pagination from "../common/pagination";
 import ListGroup from "../common/listGroup";
-import ProductsTable from "./productsTable";
 
 import SearchBox from "../common/searchBox";
 
 import { paginate } from "../utils/paginate";
-
-import { Link } from "react-router-dom";
 
 import { toast } from "react-toastify";
 
@@ -19,10 +18,11 @@ import _ from "lodash";
 
 class Products extends Component {
   state = {
+    formDisplay: false,
     products: [],
     types: [],
     currentPage: 1,
-    pageSize: 5,
+    pageSize: 10,
     searchQuery: "",
     selectedType: null,
     sortColumn: { path: "name", order: "asc" },
@@ -32,10 +32,7 @@ class Products extends Component {
     const types = [{ _id: "", name: "Tous les types" }, ...data];
 
     const { data: products } = await getProducts();
-    // products.forEach((product) => {
-    //   delete product.avis;
-    // });
-    // console.log(products);
+
     this.setState({ products, types });
   }
 
@@ -75,6 +72,12 @@ class Products extends Component {
     this.setState({ sortColumn });
   };
 
+  toggleForm = () => {
+    this.setState({
+      formDisplay: !this.state.formDisplay,
+    });
+  };
+
   getPagedData = () => {
     const {
       pageSize,
@@ -107,16 +110,13 @@ class Products extends Component {
     if (count === 0)
       return (
         <div>
+          <h2>aucun produit dans la base de donnée</h2>
           {user && (
-            <Link
-              to={"/products/new"}
-              className="btn btn-primary"
-              style={{ marginBottom: 20 }}
-            >
-              Nouveau produits
-            </Link>
+            <ProductForm
+              formDisplay={this.state.formDisplay}
+              toggleForm={this.toggleForm}
+            />
           )}
-          <p>aucun product dans la base de donnée</p>
         </div>
       );
 
@@ -131,17 +131,13 @@ class Products extends Component {
           ></ListGroup>
         </div>
         <div className="col">
+          <h3>il ya {totalCount} produits dans la base de données</h3>
           {user && (
-            <Link
-              to={"/products/new"}
-              className="btn btn-primary"
-              style={{ marginBottom: 20 }}
-            >
-              Nouveau Produit
-            </Link>
+            <ProductForm
+              formDisplay={this.state.formDisplay}
+              toggleForm={this.toggleForm}
+            />
           )}
-
-          <p>il ya {totalCount} produits dans la base de données</p>
           <SearchBox
             value={searchQuery}
             onChange={this.handleSearch}

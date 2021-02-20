@@ -1,4 +1,5 @@
 import React from "react";
+import { FaPlus } from "react-icons/fa";
 import Joi from "joi-browser";
 import Form from "../common/form";
 import {
@@ -29,7 +30,7 @@ class ProductCategorieForm extends Form {
   async populateProducts() {
     try {
       const productCategorieId = this.props.match.params.id;
-      if (productCategorieId === "new") return;
+      if (productCategorieId === "") return;
 
       const { data: productCategorie } = await getProductCategorie(
         productCategorieId
@@ -57,22 +58,41 @@ class ProductCategorieForm extends Form {
   doSubmit = async () => {
     // call the server
     await saveProductCategorie(this.state.data);
-    this.props.history.push("/productsCategorie");
+    if (this.props.match) this.props.history.push("/productsCategorie");
+    else {
+      window.location.reload();
+    }
   };
 
   render() {
+    let productCategorieId;
+    try {
+      productCategorieId = this.props.match.params.id;
+    } catch {}
     return (
-      <div>
-        <h1>Formulaire categorie de produit </h1>
-        <form onSubmit={this.handleSubmit}>
-          {this.renderInput("name", "Nom")}
-          {this.state.data.images &&
-            this.state.data.images.length != 0 &&
-            this.renderImage("images", "Image")}
-          {this.renderUpload("image", "upload image")}
-          {this.renderInput("description", "Description")}
-          {this.renderButton("Sauvegarder")}
-        </form>
+      <div
+        className={
+          "card textcenter mt-3 " +
+          (this.props.formDisplay || productCategorieId ? "" : "add-item")
+        }
+      >
+        <div
+          className="apt-addheading card-header bg-primary text-white"
+          onClick={this.props.toggleForm}
+        >
+          <FaPlus /> Ajouter categorie de produit
+        </div>
+        <div className="card-body">
+          <form id="aptForm" noValidate onSubmit={this.handleSubmit}>
+            {this.renderInput("name", "Nom")}
+            {this.state.data.images &&
+              this.state.data.images.length != 0 &&
+              this.renderImage("images", "Image")}
+            {this.renderUpload("image", "upload image")}
+            {this.renderInput("description", "Description")}
+            {this.renderButton("Sauvegarder")}
+          </form>
+        </div>
       </div>
     );
   }

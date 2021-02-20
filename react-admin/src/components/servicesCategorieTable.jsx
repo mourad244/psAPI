@@ -14,8 +14,8 @@ class ServicesCategorieTable extends Component {
       ),
     },
     { path: "smallDesc", label: "Petite description" },
-    { path: "largeDesc", label: "Large description" },
-    { path: "assistance", label: "Assistance" },
+    // { path: "largeDesc", label: "Large description" },
+    // { path: "assistance", label: "Assistance" },
     { path: "images", label: "Images" },
     {
       key: "delete",

@@ -3,15 +3,14 @@ import React, { Component } from "react";
 import { getServices, deleteService } from "../services/serviceService";
 import { getServicesCategorie } from "../services/serviceCategorieService";
 
-import Pagination from "../common/pagination";
-import ListGroup from "../common/listGroup";
 import ServicesTable from "./servicesTable";
+import ServiceForm from "./serviceForm";
+import ListGroup from "../common/listGroup";
+import Pagination from "../common/pagination";
 
 import SearchBox from "../common/searchBox";
 
 import { paginate } from "../utils/paginate";
-
-import { Link } from "react-router-dom";
 
 import { toast } from "react-toastify";
 
@@ -19,10 +18,11 @@ import _ from "lodash";
 
 class Services extends Component {
   state = {
+    formDisplay: false,
     services: [],
     categories: [],
     currentPage: 1,
-    pageSize: 5,
+    pageSize: 10,
     searchQuery: "",
     selectedCategorie: null,
     sortColumn: { path: "name", order: "asc" },
@@ -32,10 +32,7 @@ class Services extends Component {
     const categories = [{ _id: "", name: "Tous les categories" }, ...data];
 
     const { data: services } = await getServices();
-    // services.forEach((service) => {
-    //   delete service.avis;
-    // });
-    // console.log(services);
+
     this.setState({ services, categories });
   }
 
@@ -75,6 +72,12 @@ class Services extends Component {
     this.setState({ sortColumn });
   };
 
+  toggleForm = () => {
+    this.setState({
+      formDisplay: !this.state.formDisplay,
+    });
+  };
+
   getPagedData = () => {
     const {
       pageSize,
@@ -108,16 +111,13 @@ class Services extends Component {
     if (count === 0)
       return (
         <div>
+          <h2>aucun service dans la base de donnée</h2>
           {user && (
-            <Link
-              to={"/services/new"}
-              className="btn btn-primary"
-              style={{ marginBottom: 20 }}
-            >
-              Nouveau Service
-            </Link>
+            <ServiceForm
+              formDisplay={this.state.formDisplay}
+              toggleForm={this.toggleForm}
+            />
           )}
-          <p>aucun service dans la base de donnée</p>
         </div>
       );
 
@@ -132,22 +132,20 @@ class Services extends Component {
           ></ListGroup>
         </div>
         <div className="col">
-          {user && (
-            <Link
-              to={"/services/new"}
-              className="btn btn-primary"
-              style={{ marginBottom: 20 }}
-            >
-              Nouveau Service
-            </Link>
-          )}
+          <h3>il ya {totalCount} services dans la base de données</h3>
 
-          <p>il ya {totalCount} services dans la base de données</p>
+          {user && (
+            <ServiceForm
+              formDisplay={this.state.formDisplay}
+              toggleForm={this.toggleForm}
+            />
+          )}
           <SearchBox
             value={searchQuery}
             onChange={this.handleSearch}
           ></SearchBox>
           <ServicesTable
+            user={user}
             services={services}
             sortColumn={sortColumn}
             onDelete={this.handleDelete}

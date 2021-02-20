@@ -12,10 +12,10 @@ class ServicesTable extends Component {
       ),
     },
     { path: "desc1", label: "Desc1" },
-    { path: "desc2", label: "Desc2" },
-    { path: "caracteristiques", label: "Caracteristiques" },
+    // { path: "desc2", label: "Desc2" },
+    // { path: "caracteristiques", label: "Caracteristiques" },
     { path: "images", label: "Images" },
-    { path: "accessoires", label: "Accessoires" },
+    // { path: "accessoires", label: "Accessoires" },
     {
       key: "delete",
       content: (service) => (
