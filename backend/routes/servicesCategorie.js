@@ -24,12 +24,10 @@ router.post("/", auth, async (req, res) => {
 
     const { error } = validate(req.body);
     if (error) {
-      console.log(error);
       deleteImages(req.files);
       return res.status(400).send(error.details[0].message);
     }
 
-    console.log(req.body);
     let filtered = {};
     for (let item in req.files) {
       filtered[item] = req.files[item];
@@ -43,7 +41,6 @@ router.post("/", auth, async (req, res) => {
       smallDesc: smallDesc,
       largeDesc: largeDesc,
       assistance: assistance,
-      // images: req.files != undefined ? req.files.path : "",
       images: images ? images.map((file) => file.path) : [],
     });
     await serviceCategorie.save();
