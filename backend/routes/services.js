@@ -26,7 +26,6 @@ router.post("/", auth, async (req, res) => {
     await uploadImages(req, res);
     const { error } = validate(req.body);
     if (error) {
-      console.log(error);
       deleteImages(req.files);
       return res.status(400).send(error.details[0].message);
     }
@@ -57,8 +56,9 @@ router.post("/", auth, async (req, res) => {
       accessoires: accessoires ? accessoires.map((file) => file.path) : [],
       categorie: categorie,
     });
-
+    serviceCategorie.services.push(service._id);
     await service.save();
+    await serviceCategorie.save();
     res.send(service);
   } catch (err) {
     res.status(500).send({
@@ -96,6 +96,11 @@ router.put("/:id", auth, async (req, res) => {
   if (images) service.images.push(images.map((file) => file.path));
   if (accessoires)
     service.accessoires.push(accessoires.map((file) => file.path));
+
+  serviceCategorie.services.indexOf(req.params.id) === -1
+    ? serviceCategorie.services.push(req.params.id)
+    : console.log("This item already exists");
+  await serviceCategorie.save();
   await service.save();
 
   if (!service)
@@ -108,7 +113,6 @@ router.get("/:id", validateObjectId, async (req, res) => {
   const service = await Service.findById(req.params.id)
     // .populate("Categorie", "name")
     .select("-__v");
-
   if (!service)
     return res.status(404).send("The service with the given ID was not found.");
 
