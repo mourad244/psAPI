@@ -121,6 +121,16 @@ router.get("/:id", validateObjectId, async (req, res) => {
 
 router.delete("/:id", auth, async (req, res) => {
   const service = await Service.findByIdAndRemove(req.params.id);
+  const serviceCategorie = await ServiceCategorie.findById(service.categorie);
+
+  // delete service from array services of servicesCategorie
+
+  const services = serviceCategorie.services;
+  const index = services.indexOf(req.params.id);
+  if (index > -1) services.splice(index, 1);
+  serviceCategorie.services = services;
+  await serviceCategorie.save();
+
   if (service.images) deleteImages(service.images);
   if (service.accessoires) deleteImages(service.accessoires);
   // if (!service)
