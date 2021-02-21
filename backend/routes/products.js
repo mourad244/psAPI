@@ -12,8 +12,6 @@ const logger = require("../startup/logging");
 
 const validateObjectId = require("../middleware/validateObjectId");
 const _ = require("lodash");
-const fs = require("fs");
-const path = require("path");
 
 const router = express.Router();
 

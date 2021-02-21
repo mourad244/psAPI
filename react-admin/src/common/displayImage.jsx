@@ -1,8 +1,5 @@
 import React from "react";
-import { imageUrl } from "../config.json";
 
-// name = images
-//images =
 const DisplayImage = ({ name, label, images, height = 200, ...rest }) => {
   return (
     <div className="col-md-10">
@@ -12,13 +9,17 @@ const DisplayImage = ({ name, label, images, height = 200, ...rest }) => {
             <img
               // {...rest}
               key={name + index}
-              src={`${imageUrl}/${img}`}
+              src={`${process.env.REACT_APP_API_IMAGE_URL}/${img}`}
               height={height + "px"}
             />
           );
         })
       ) : (
-        <img src={`${imageUrl}/${images}`} alt={label} height={height + "px"} />
+        <img
+          src={`${process.env.REACT_APP_API_IMAGE_URL}/${images}`}
+          alt={label}
+          height={height + "px"}
+        />
       )}
     </div>
   );

@@ -1,7 +1,6 @@
 import http from "./httpService";
-import { apiUrl } from "../config.json";
 
-const apiEndpoint = apiUrl + "/services";
+const apiEndpoint = "/services";
 
 function serviceUrl(id) {
   return `${apiEndpoint}/${id}`;

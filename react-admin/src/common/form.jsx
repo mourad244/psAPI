@@ -3,7 +3,6 @@ import Joi from "joi-browser";
 import Input from "./input";
 import Select from "./select";
 import axios from "axios";
-import { apiUrl } from "../config.json";
 import DisplayImage from "./displayImage";
 import UploadImage from "./uploadImage";
 class Form extends Component {
@@ -107,8 +106,8 @@ class Form extends Component {
     }
     this.props.match != undefined &&
     this.props.match.params.id /* && this.props.match.params.id != "new" */
-      ? axios.put(apiUrl + `/${form}/${this.props.match.params.id}`, fd)
-      : axios.post(apiUrl + `/${form}`, fd);
+      ? axios.put(`/${form}/${this.props.match.params.id}`, fd)
+      : axios.post(`/${form}`, fd);
     if (this.props.match) this.props.history.push(`/${form}`);
     else {
       window.location.reload();

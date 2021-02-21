@@ -19,6 +19,13 @@ const serviceCategorieSchema = new mongoose.Schema({
   images: {
     type: Array,
   },
+  services: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      trim: true,
+      ref: "Service",
+    },
+  ],
 });
 const ServiceCategorie = mongoose.model("CategorieSvc", serviceCategorieSchema);
 
@@ -29,6 +36,7 @@ function validateServiceCategorie(categorieSvc) {
     largeDesc: Joi.array().items(Joi.string()),
     images: Joi.array(),
     assistance: Joi.array().items(Joi.string()),
+    services: Joi.array().items(Joi.objectId()),
   });
   return schema.validate(categorieSvc);
 }
