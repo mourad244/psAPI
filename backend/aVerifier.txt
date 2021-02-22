@@ -1,6 +1,0 @@
--- trim all input before saving in mongodb
--- for productstype, it is necessary to required to add an image or not
---where to allow an input to be empty (like description)
--- deal with deleting a product that doznst have an image
-
--- asyncMiddleware to all functions that call databse
