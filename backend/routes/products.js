@@ -64,7 +64,10 @@ router.post("/", auth, async (req, res) => {
       images: images ? images.map((file) => file.path) : [],
     });
 
+    productType.products.push(product._id);
+
     await product.save();
+    await productType.save();
     res.send(product);
   } catch (err) {
     res.status(500).send({
@@ -95,6 +98,11 @@ router.put("/:id", auth, async (req, res) => {
   if (type) product.type = type;
   if (description) product.description = description;
   if (images) product.images.push(images.map((file) => file.path));
+
+  productType.products.indexOf(req.params.id) === -1
+    ? productType.products.push(req.params.id)
+    : console.log("This item already exists");
+  await productType.save();
   await product.save();
 
   if (!product)
@@ -117,6 +125,14 @@ router.delete("/:id", auth, async (req, res) => {
   const product = await Product.findByIdAndRemove(req.params.id);
   // if (!product)
   //   return res.status(404).send("le product avec cette id n'existe pas.");
+  const productType = await ProductType.findById(product.type);
+
+  const products = productType.products;
+  const index = products.indexOf(req.params.id);
+  if (index > -1) products.splice(index, 1);
+  productType.products = products;
+  await productType.save();
+
   if (product.images) deleteImages(product.images);
   // console.log(product);
   // fs.unlinkSync(product.images);

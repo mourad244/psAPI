@@ -20,6 +20,13 @@ const productTypeSchema = new mongoose.Schema({
     ref: "ProductCategorie",
     required: true,
   },
+  products: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      trim: true,
+      ref: "Product",
+    },
+  ],
 });
 
 const ProductType = mongoose.model("ProductType", productTypeSchema);
@@ -30,8 +37,8 @@ function validateProductType(productType) {
     images: Joi.array().allow(null),
     description: Joi.string().max(255).allow(""),
     categorie: Joi.objectId().required(),
+    products: Joi.array().items(Joi.objectId()),
   });
-
   return schema.validate(productType);
 }
 exports.productTypeSchema = productTypeSchema;

@@ -6,7 +6,6 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    minlength: 3,
     maxlength: 255,
   },
   images: {
@@ -33,7 +32,7 @@ const Product = mongoose.model("Product", productSchema);
 
 function validateProduct(product) {
   const schema = Joi.object({
-    name: Joi.string().min(3).max(50).required(),
+    name: Joi.string().max(255).required(),
     type: Joi.objectId().required(),
     images: Joi.array(),
     avis: Joi.array().items(Joi.objectId()),

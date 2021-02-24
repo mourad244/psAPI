@@ -48,7 +48,6 @@ router.post("/", auth, async (req, res) => {
       name: name,
       description: description,
       categorie: categorie,
-      // images: req.files != undefined ? req.file.path : "",
       images: images ? images.map((file) => file.path) : [],
     });
 
@@ -94,7 +93,7 @@ router.put("/:id", auth, async (req, res) => {
 
 router.get("/:id", validateObjectId, async (req, res) => {
   const productType = await ProductType.findById(req.params.id)
-    // .populate("categorie", "name")
+    .populate("products", "name images")
     .select("-__v");
 
   if (!productType)

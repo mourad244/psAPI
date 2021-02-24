@@ -90,9 +90,8 @@ router.put("/:id", auth, async (req, res) => {
 
 router.get("/:id", validateObjectId, async (req, res) => {
   const serviceCategorie = await ServiceCategorie.findById(req.params.id)
-    .populate("services", "name")
+    .populate("services", "name images")
     .select("-__v");
-  console.log(serviceCategorie);
   if (!serviceCategorie)
     return res
       .status(404)
