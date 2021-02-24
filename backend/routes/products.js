@@ -97,7 +97,7 @@ router.put("/:id", auth, async (req, res) => {
   if (name) product.name = name;
   if (type) product.type = type;
   if (description) product.description = description;
-  if (images) product.images.push(images.map((file) => file.path));
+  if (images) product.images.push(...images.map((file) => file.path));
 
   productType.products.indexOf(req.params.id) === -1
     ? productType.products.push(req.params.id)

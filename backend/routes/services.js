@@ -93,9 +93,9 @@ router.put("/:id", auth, async (req, res) => {
   if (caracteristiques) {
     service.caracteristiques = caracteristiques;
   }
-  if (images) service.images.push(images.map((file) => file.path));
+  if (images) service.images.push(...images.map((file) => file.path));
   if (accessoires)
-    service.accessoires.push(accessoires.map((file) => file.path));
+    service.accessoires.push(...accessoires.map((file) => file.path));
 
   serviceCategorie.services.indexOf(req.params.id) === -1
     ? serviceCategorie.services.push(req.params.id)

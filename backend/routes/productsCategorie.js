@@ -68,7 +68,7 @@ router.put("/:id", auth, async (req, res) => {
 
   if (name) productCategorie.name = name;
   if (description) productCategorie.description = description;
-  if (images) productCategorie.images.push(images.map((file) => file.path));
+  if (images) productCategorie.images.push(...images.map((file) => file.path));
   await productCategorie.save();
 
   if (!productCategorie)

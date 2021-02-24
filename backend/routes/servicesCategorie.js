@@ -76,7 +76,7 @@ router.put("/:id", auth, async (req, res) => {
   if (smallDesc) serviceCategorie.smallDesc = smallDesc;
   if (largeDesc) serviceCategorie.largeDesc = largeDesc;
   if (assistance) serviceCategorie.assistance = assistance;
-  if (images) serviceCategorie.images.push(images.map((file) => file.path));
+  if (images) serviceCategorie.images.push(...images.map((file) => file.path));
 
   await serviceCategorie.save();
 
