@@ -107,10 +107,11 @@ class Form extends Component {
         }
       }
     }
+    console.log(`${process.env.REACT_APP_API_IMAGE_URL}`);
     this.props.match != undefined &&
     this.props.match.params.id /* && this.props.match.params.id != "new" */
-      ? axios.put(`/${form}/${this.props.match.params.id}`, fd)
-      : axios.post(`/${form}`, fd);
+      ? await axios.put(`{${form}/${this.props.match.params.id}`, fd)
+      : await axios.post(`/${form}`, fd);
     if (this.props.match) this.props.history.push(`/${form}`);
     else {
       window.location.reload();
